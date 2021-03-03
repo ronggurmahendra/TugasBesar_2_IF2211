@@ -1,0 +1,14 @@
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\MarkLizardman.exe.config
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\MarkLizardman.exe
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\MarkLizardman.pdb
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\AutomaticGraphLayout.dll
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\AutomaticGraphLayout.Drawing.dll
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\Microsoft.Msagl.GraphViewerGdi.dll
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\bin\Debug\Microsoft.Msagl.WpfGraphControl.dll
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.csprojAssemblyReference.cache
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.Properties.Resources.resources
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.csproj.GenerateResource.cache
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.csproj.CoreCompileInputs.cache
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.csproj.CopyComplete
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.exe
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.pdb
