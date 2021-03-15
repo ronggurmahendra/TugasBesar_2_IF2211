@@ -94,7 +94,6 @@ namespace MarkLizardman
         // Array of lists for
         // Adjacency List Representation
         public List<int>[] adj;
-        private static int node = 0;
 
         // Constructor
         public Graph(int v)
@@ -184,27 +183,29 @@ namespace MarkLizardman
         }
 
         // A function used by DFS
-        public List<int> DFSUtil(List<int> AL, int v, List<int> visited, 
+        public void DFSUtil(List<int> AL, int v, List<int> visited, 
             int target, List<List<int>> road_used, int parent, int it, int node)
         {
-
             // Check if all th node is visited or not
             // and count unvisited nodes
-            int c = visited.Count;
+            int c = visited.Distinct().Count();
 
             // If all the node is visited return;
-            if (c == node)
-                return AL;
+            if (c == node || AL.Contains(target))
+            {
+                return;
+            }
 
             // Mark the current node as visited
             // and print it
             visited.Add(v);
+            road_used.Add(new List<int>() { parent, v });
+            //AL.Add(v);
             if (!AL.Contains(v))
             {
                 AL.Add(v);
             }
             //Console.Write(v + " ");
-            road_used.Add(new List<int>() { parent, v });
 
             // Recur for all the vertices
             // adjacent to this vertex
@@ -214,44 +215,28 @@ namespace MarkLizardman
                 if (!visited[n])
                     AL = DFSUtil(AL, n, visited);
             }*/
-            if (AL.Contains(target))
+            for (int x = 0; x < node; x++)
             {
-                return AL;
-            }
-            if (vList.Count > 0)
-            {
-                bool found = false;
-                int i = 0;
-                while (!found && i < vList.Count)
+                // call the DFs function if not visited
+                if (!visited.Contains(x) && vList.Contains(x))
                 {
-                    if (!visited.Contains(vList.OrderBy(z => z).Skip(i).First()))
-                    {
-                        found = true;
-                        AL = DFSUtil(AL, vList.OrderBy(z => z).Skip(i).First(), visited, target, road_used, v, it+1, node);
-                    }
-                    else
-                    {
-                        i++;
-                    }
+                    DFSUtil(AL, x, visited, target, road_used, v, it + 1, node);
                 }
             }
-            else
+            // Backtrack through the last
+            // visited nodes
+            for (int y = 0; y < road_used.Count; y++)
             {
-                for (int y = 0; y < road_used.Count; y++)
+                if (road_used[y][1] == v)
                 {
-                    if (road_used[y][1] == v)
-                    {
-                        AL.Remove(v);
-                        DFSUtil(AL, road_used[y][0], visited, target, road_used, v, it + 1, node);
-                    }
+                    DFSUtil(AL, road_used[y][0], visited, target, road_used, v, it + 1, node);
                 }
             }
-            return AL;
         }
 
         // The function to do DFS traversal.
         // It uses recursive DFSUtil()
-        public List<int> DFS(List<int> AL, int v, int target, int node)
+        public void DFS(List<int> AL, int v, int target, int node)
         {
             // Mark all the vertices as not visited
             // (set as false by default in c#)
@@ -261,8 +246,8 @@ namespace MarkLizardman
 
             // Call the recursive helper function
             // to print DFS traversal
-            AL = DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
-            return AL;
+            DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
+            //AL.Add(target);
         }
         public void InputGraph(List<List<string>> DataNode, Dictionary<int,string> Kamus)
         {
@@ -272,7 +257,13 @@ namespace MarkLizardman
             {
                 AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key);
             }
-            
+
+            for (int i=0; i < V; i++)
+            {
+                adj[i].Sort();
+            }
+
+
         }
         public void InputSisa()
         {
@@ -334,8 +325,8 @@ namespace MarkLizardman
             */
             //g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
-            AL = g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
-                input.Kamus.FirstOrDefault(x => x.Value == "D").Key, input.Node);
+            g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
+                input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
@@ -347,19 +338,21 @@ namespace MarkLizardman
             */
             for (int i = 0; i < g.adj.Count(); i++)
             {
-                Console.Write(i + ": ");
+                Console.Write(input.Kamus.ElementAt(i).Value + ": ");
                 foreach (var num in g.adj[i])
                 {
-                    Console.Write(num);
+                    Console.Write(input.Kamus.ElementAt(num).Value);
                     Console.Write(" ");
                 }
                 Console.Write("\n");
             }
             //g.InputSisa();
             Console.Write("AL : ");
+            
             for(int i = 0; i < AL.Count; i++)
             {
-                Console.Write(AL[i]);
+                Console.Write(input.Kamus.ElementAt(AL[i]).Value);
+                //Console.Write(AL[i]);
                 Console.Write(" ");
             }
             
