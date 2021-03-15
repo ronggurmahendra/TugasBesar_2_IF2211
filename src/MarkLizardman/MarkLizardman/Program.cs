@@ -6,37 +6,81 @@ using System.Windows.Forms;
 
 namespace MarkLizardman
 {
-    /*class ViewerSample
+    class Input
     {
-        public static void Main()
+        public Dictionary<int, string> Kamus;
+        public List<List<string>> DataNode;
+        public int Node;
+        public Input(string filename)
         {
-            //create a form 
-            System.Windows.Forms.Form form = new System.Windows.Forms.Form();
-            //create a viewer object 
-            Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            //create a graph object 
-            Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
-            //create the graph content 
-            graph.AddEdge("A", "B");
-            graph.AddEdge("B", "C");
-            graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-            graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
-            graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
-            Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
-            c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
-            c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
-            //bind the graph to the viewer 
-            viewer.Graph = graph;
-            //associate the viewer with the form 
-            form.SuspendLayout();
-            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            form.Controls.Add(viewer);
-            form.ResumeLayout();
-            //show the form 
-            form.ShowDialog();
+            DataNode = FileInput(filename);
+            Kamus = KamusData(DataNode);
+            Node = Kamus.Count;
         }
-    }*/
-    
+        private List<List<string>> FileInput(string filename)
+        {
+            List<List<string>> bracket = new List<List<string>>();
+            // Read each line of the file into a string array. Each element
+            // of the array is one line of the file.
+            string[] lines = System.IO.File.ReadAllLines(filename);
+
+            // Display the file contents by using a foreach loop.
+            Console.WriteLine("Contents of WriteLines2.txt = ");
+            int i = 0;
+            foreach (string line in lines)
+            {
+                if (i == 0)
+                {
+                    i++;
+                }
+                else
+                {
+                    List<string> line2 = line.Split(' ').ToList();
+                    bracket.Add(line2);
+                    i++;
+                }
+                // Use a tab to indent each line of the file.
+            }
+            foreach (var line in bracket)
+            {
+                Console.Write(line[0]);
+                Console.Write(line[1]);
+                Console.WriteLine();
+            }
+            return bracket;
+        }
+
+        private Dictionary<int, string> KamusData(List<List<string>> bracket)
+        {
+            List<string> bahanbaku = new List<string>();
+            foreach (var line in bracket)
+            {
+                if (!bahanbaku.Contains(line[0]))
+                {
+                    //Cek apakah elemen ke 0 dari tiap line sudah ada di bahanbaku
+                    bahanbaku.Add(line[0]);
+                }
+                if (!bahanbaku.Contains(line[1]))
+                {
+                    //Cek apakah elemen ke 1 dari tiap line sudah ada di bahanbaku
+                    bahanbaku.Add(line[1]);
+                }
+            }
+            //Himpunan bahanbaku sudah siap
+            //Masukkan jumlah node ke variabel static global node
+            bahanbaku.Sort();
+
+            /*Tahap Pembuatan Dictionary*/
+            Dictionary<int, string> kamus = new Dictionary<int, string>();
+            int i = 1;
+            foreach (string elemen in bahanbaku)
+            {
+                kamus.Add(i, elemen);
+                i++;
+            }
+            return kamus;
+        }
+    }
     class Graph
     {
         //create a form 
@@ -50,9 +94,10 @@ namespace MarkLizardman
         // Array of lists for
         // Adjacency List Representation
         private List<int>[] adj;
+        private static int node = 0;
 
         // Constructor
-        Graph(int v)
+        public Graph(int v)
         {
             V = v;
             adj = new List<int>[v];
@@ -269,13 +314,30 @@ namespace MarkLizardman
                 "Following is Depth First Traversal "
                 + "(starting from vertex 2)");
         }
-
+        
+    }
+    class MainProgram
+    {
         public static void Main(String[] args)
         {
+            string filename = @"..\..\graph.txt";
+            Input input = new Input(filename);
             //create the graph content 
-            Graph g = new Graph(9);
+            Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
-            g.Input();
+            foreach (var key in input.Kamus)
+            {
+                Console.Write(key.Key);
+                Console.Write("\t" + key.Value);
+                Console.WriteLine();
+            }
+            foreach (var line in input.DataNode)
+            {
+                Console.Write(line[0]);
+                Console.Write("  -->  " + line[1]);
+                Console.WriteLine();
+            }
+            /*
             g.Output();
             AL = g.DFS(AL, 1, 8, 9);
             Console.Write("\n");
@@ -302,16 +364,8 @@ namespace MarkLizardman
                 Console.Write(AL[i]);
                 Console.Write(" ");
             }
-            Console.ReadKey();
-            /*graph.AddEdge("A", "B");
-            graph.AddEdge("B", "C");
-            graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-            graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
-            graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
-            Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
-            c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
-            c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
             */
+            Console.ReadKey();
         }
     }
 }

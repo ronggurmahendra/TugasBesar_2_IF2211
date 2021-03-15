@@ -12,3 +12,4 @@ D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Release\MarkLizar
 D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Release\MarkLizardman.csproj.CopyComplete
 D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Release\MarkLizardman.exe
 D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Release\MarkLizardman.pdb
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Release\MarkLizardman.csprojAssemblyReference.cache
