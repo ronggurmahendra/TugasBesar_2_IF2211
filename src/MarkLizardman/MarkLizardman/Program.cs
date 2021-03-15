@@ -72,7 +72,7 @@ namespace MarkLizardman
 
             /*Tahap Pembuatan Dictionary*/
             Dictionary<int, string> kamus = new Dictionary<int, string>();
-            int i = 1;
+            int i = 0;
             foreach (string elemen in bahanbaku)
             {
                 kamus.Add(i, elemen);
@@ -93,7 +93,7 @@ namespace MarkLizardman
 
         // Array of lists for
         // Adjacency List Representation
-        private List<int>[] adj;
+        public List<int>[] adj;
         private static int node = 0;
 
         // Constructor
@@ -184,14 +184,13 @@ namespace MarkLizardman
         }
 
         // A function used by DFS
-        private List<int> DFSUtil(List<int> AL, int v, List<int> visited, 
+        public List<int> DFSUtil(List<int> AL, int v, List<int> visited, 
             int target, List<List<int>> road_used, int parent, int it, int node)
         {
-            int c = 0;
 
             // Check if all th node is visited or not
             // and count unvisited nodes
-            c = visited.Count;
+            int c = visited.Count;
 
             // If all the node is visited return;
             if (c == node)
@@ -215,6 +214,10 @@ namespace MarkLizardman
                 if (!visited[n])
                     AL = DFSUtil(AL, n, visited);
             }*/
+            if (AL.Contains(target))
+            {
+                return AL;
+            }
             if (vList.Count > 0)
             {
                 bool found = false;
@@ -232,10 +235,6 @@ namespace MarkLizardman
                     }
                 }
             }
-            if (AL.Contains(target))
-            {
-                return AL;
-            }
             else
             {
                 for (int y = 0; y < road_used.Count; y++)
@@ -252,7 +251,7 @@ namespace MarkLizardman
 
         // The function to do DFS traversal.
         // It uses recursive DFSUtil()
-        private List<int> DFS(List<int> AL, int v, int target, int node)
+        public List<int> DFS(List<int> AL, int v, int target, int node)
         {
             // Mark all the vertices as not visited
             // (set as false by default in c#)
@@ -265,20 +264,15 @@ namespace MarkLizardman
             AL = DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
             return AL;
         }
-        public void Input()
+        public void InputGraph(List<List<string>> DataNode, Dictionary<int,string> Kamus)
         {
-            AddEdge(1, 2);
-            AddEdge(1, 3);
-            AddEdge(1, 4);
-            AddEdge(2, 3);
-            AddEdge(2, 5);
-            AddEdge(2, 6);
-            AddEdge(3, 6);
-            AddEdge(3, 7);
-            AddEdge(4, 6);
-            AddEdge(6, 5);
-            AddEdge(5, 8);
-            AddEdge(6, 8);
+            //Console.Write(Kamus.ElementAt(1).Key);
+            
+            foreach(var line in DataNode)
+            {
+                AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key);
+            }
+            
         }
         public void InputSisa()
         {
@@ -325,7 +319,7 @@ namespace MarkLizardman
             //create the graph content 
             Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
-            foreach (var key in input.Kamus)
+            /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
                 Console.Write("\t" + key.Value);
@@ -337,17 +331,21 @@ namespace MarkLizardman
                 Console.Write("  -->  " + line[1]);
                 Console.WriteLine();
             }
-            /*
-            g.Output();
-            AL = g.DFS(AL, 1, 8, 9);
+            */
+            //g.Output();
+            g.InputGraph(input.DataNode, input.Kamus);
+            AL = g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
+                input.Kamus.FirstOrDefault(x => x.Value == "D").Key, input.Node);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
+            /*
             for (int i = 0; i < AL.Count - 1; i++)
             {
                 g.AddEdgeDFS(AL[i], AL[i + 1]);
 
             }
-            for (int i = 1; i < g.adj.Count(); i++)
+            */
+            for (int i = 0; i < g.adj.Count(); i++)
             {
                 Console.Write(i + ": ");
                 foreach (var num in g.adj[i])
@@ -364,7 +362,7 @@ namespace MarkLizardman
                 Console.Write(AL[i]);
                 Console.Write(" ");
             }
-            */
+            
             Console.ReadKey();
         }
     }
