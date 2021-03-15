@@ -131,29 +131,6 @@ namespace MarkLizardman
             }*/
         }
 
-        void AddEdgeSisa(int v, int w)
-        {
-            bool found = false;
-            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
-            {
-                if (!found)
-                {
-                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
-                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
-                    {
-                        found = true;
-                    }
-                }
-            }
-            if (found == false)
-            {
-                var edge = graph.AddEdge(v.ToString(), w.ToString());
-                edge.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-                edge.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                edge.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
-            }
-        }
-
         void AddEdgeDFS(int v, int w)
         {
             bool found = false;
@@ -249,6 +226,60 @@ namespace MarkLizardman
             DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
             //AL.Add(target);
         }
+
+        public void BFS(List<int> BL, int v, int target, int node)
+        {
+
+            // Mark all the vertices as not
+            // visited(By default set as false) 
+            List<int> visited = new List<int>();
+
+            // Create a queue for BFS 
+            Queue<int> queue = new Queue<int>();
+
+            // Mark the current node as 
+            // visited and enqueue it 
+            visited.Add(v);
+            if (!BL.Contains(v))
+            {
+                BL.Add(v);
+            }
+            queue.Enqueue(v);
+
+            while (queue.Any())
+            {
+                    // Dequeue a vertex from queue 
+                    // and print it
+                    int s = queue.Dequeue();
+                    // Console.Write(s + " ");
+
+                    if (!BL.Contains(s))
+                    {
+                        BL.Add(s);
+                    }
+                    //BL.Add(s);
+
+                    // Get all adjacent vertices of the 
+                    // dequeued vertex s. If a adjacent
+                    // has not been visited, then mark it 
+                    // visited and enqueue it 
+                    List<int> list = adj[s];
+
+                    for (int i = 0; i < node; i++)
+                    {
+                        if (!visited.Contains(i) && list.Contains(i))
+                        {
+                            visited.Add(i);
+                            queue.Enqueue(i);
+                        }
+                    }
+                
+                if (s == target)
+                {
+                    break;
+                }
+            }
+        }
         public void InputGraph(List<List<string>> DataNode, Dictionary<int,string> Kamus)
         {
             //Console.Write(Kamus.ElementAt(1).Key);
@@ -295,9 +326,10 @@ namespace MarkLizardman
             //show the form 
             form.ShowDialog();
             */
-            Console.WriteLine(
+            /*Console.WriteLine(
                 "Following is Depth First Traversal "
                 + "(starting from vertex 2)");
+            */
         }
         
     }
@@ -310,6 +342,7 @@ namespace MarkLizardman
             //create the graph content 
             Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
+            List<int> BL = new List<int>();
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -323,9 +356,11 @@ namespace MarkLizardman
                 Console.WriteLine();
             }
             */
-            //g.Output();
+            g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
             g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
+                input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
+            g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
@@ -346,6 +381,7 @@ namespace MarkLizardman
                 }
                 Console.Write("\n");
             }
+
             //g.InputSisa();
             Console.Write("AL : ");
             
@@ -355,7 +391,17 @@ namespace MarkLizardman
                 //Console.Write(AL[i]);
                 Console.Write(" ");
             }
-            
+            Console.WriteLine();
+
+            Console.Write("BL : ");
+
+            for (int i = 0; i < BL.Count; i++)
+            {
+                Console.Write(input.Kamus.ElementAt(BL[i]).Value);
+                //Console.Write(BL[i]);
+                Console.Write(" ");
+            }
+
             Console.ReadKey();
         }
     }
