@@ -1,0 +1,16 @@
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\Graph_Backtracking.exe
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\Graph_Backtracking.deps.json
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\Graph_Backtracking.runtimeconfig.json
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\Graph_Backtracking.runtimeconfig.dev.json
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\Graph_Backtracking.dll
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\ref\Graph_Backtracking.dll
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\bin\Debug\net5.0\Graph_Backtracking.pdb
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.csprojAssemblyReference.cache
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.GeneratedMSBuildEditorConfig.editorconfig
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.AssemblyInfoInputs.cache
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.AssemblyInfo.cs
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.csproj.CoreCompileInputs.cache
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.dll
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\ref\Graph_Backtracking.dll
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.pdb
+D:\git\TugasBesar_2_IF2211\src\Graph_Backtracking\Graph_Backtracking\obj\Debug\net5.0\Graph_Backtracking.genruntimeconfig.cache

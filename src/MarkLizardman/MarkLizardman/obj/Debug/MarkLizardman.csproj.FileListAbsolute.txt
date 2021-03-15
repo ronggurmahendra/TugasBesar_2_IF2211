@@ -12,3 +12,4 @@ D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardm
 D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.csproj.CopyComplete
 D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.exe
 D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.pdb
+D:\git\TugasBesar_2_IF2211\src\MarkLizardman\MarkLizardman\obj\Debug\MarkLizardman.Form1.resources

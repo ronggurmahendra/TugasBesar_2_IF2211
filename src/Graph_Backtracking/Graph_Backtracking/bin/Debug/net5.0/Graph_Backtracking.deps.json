@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Graph_Backtracking/1.0.0": {
+        "runtime": {
+          "Graph_Backtracking.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Graph_Backtracking/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

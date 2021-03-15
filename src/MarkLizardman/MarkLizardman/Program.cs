@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace MarkLizardman
 {
-    class ViewerSample
+    /*class ViewerSample
     {
         public static void Main()
         {
@@ -35,6 +35,283 @@ namespace MarkLizardman
             //show the form 
             form.ShowDialog();
         }
-    }
+    }*/
+    
+    class Graph
+    {
+        //create a form 
+        System.Windows.Forms.Form form = new System.Windows.Forms.Form();
+        //create a viewer object 
+        Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+        //create a graph object 
+        Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
+        private int V; // No. of vertices
 
+        // Array of lists for
+        // Adjacency List Representation
+        private List<int>[] adj;
+
+        // Constructor
+        Graph(int v)
+        {
+            V = v;
+            adj = new List<int>[v];
+            for (int i = 0; i < v; ++i)
+                adj[i] = new List<int>();
+        }
+
+        // Function to Add an edge into the graph
+        void AddEdge(int v, int w)
+        {
+            //JANGAN LUPA
+            adj[v].Add(w); // Add w to v's list.
+            adj[w].Add(v);
+            /*bool found = false;
+            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
+            {
+                if (!found)
+                {
+                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
+                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
+                    {
+                        found = true;
+                    }
+                }
+            }
+            if (found == false)
+            {
+                var edge = graph.AddEdge(v.ToString(), w.ToString());
+                edge.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+                edge.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                edge.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+            }*/
+        }
+
+        void AddEdgeSisa(int v, int w)
+        {
+            bool found = false;
+            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
+            {
+                if (!found)
+                {
+                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
+                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
+                    {
+                        found = true;
+                    }
+                }
+            }
+            if (found == false)
+            {
+                var edge = graph.AddEdge(v.ToString(), w.ToString());
+                edge.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+                edge.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                edge.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+            }
+        }
+
+        void AddEdgeDFS(int v, int w)
+        {
+            bool found = false;
+            /*
+            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
+            {
+                if (!found)
+                {
+                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
+                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
+                    {
+                        found = true;
+                    }
+                }
+            }
+            */
+            if(found == false)
+            {
+                    var edge2 = graph.AddEdge(v.ToString(), w.ToString());
+                    edge2.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                    edge2.Attr.LineWidth = 3;
+                    edge2.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                    edge2.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                    graph.FindNode(v.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
+                    graph.FindNode(w.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
+            }
+        }
+
+        // A function used by DFS
+        private List<int> DFSUtil(List<int> AL, int v, List<int> visited, 
+            int target, List<List<int>> road_used, int parent, int it, int node)
+        {
+            int c = 0;
+
+            // Check if all th node is visited or not
+            // and count unvisited nodes
+            c = visited.Count;
+
+            // If all the node is visited return;
+            if (c == node)
+                return AL;
+
+            // Mark the current node as visited
+            // and print it
+            visited.Add(v);
+            if (!AL.Contains(v))
+            {
+                AL.Add(v);
+            }
+            //Console.Write(v + " ");
+            road_used.Add(new List<int>() { parent, v });
+
+            // Recur for all the vertices
+            // adjacent to this vertex
+            List<int> vList = adj[v];
+            /*foreach (var n in vList)
+            {
+                if (!visited[n])
+                    AL = DFSUtil(AL, n, visited);
+            }*/
+            if (vList.Count > 0)
+            {
+                bool found = false;
+                int i = 0;
+                while (!found && i < vList.Count)
+                {
+                    if (!visited.Contains(vList.OrderBy(z => z).Skip(i).First()))
+                    {
+                        found = true;
+                        AL = DFSUtil(AL, vList.OrderBy(z => z).Skip(i).First(), visited, target, road_used, v, it+1, node);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+            if (AL.Contains(target))
+            {
+                return AL;
+            }
+            else
+            {
+                for (int y = 0; y < road_used.Count; y++)
+                {
+                    if (road_used[y][1] == v)
+                    {
+                        AL.Remove(v);
+                        DFSUtil(AL, road_used[y][0], visited, target, road_used, v, it + 1, node);
+                    }
+                }
+            }
+            return AL;
+        }
+
+        // The function to do DFS traversal.
+        // It uses recursive DFSUtil()
+        private List<int> DFS(List<int> AL, int v, int target, int node)
+        {
+            // Mark all the vertices as not visited
+            // (set as false by default in c#)
+            List<int> visited = new List<int>();
+
+            List<List<int>> road_used = new List<List<int>>();
+
+            // Call the recursive helper function
+            // to print DFS traversal
+            AL = DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
+            return AL;
+        }
+        public void Input()
+        {
+            AddEdge(1, 2);
+            AddEdge(1, 3);
+            AddEdge(1, 4);
+            AddEdge(2, 3);
+            AddEdge(2, 5);
+            AddEdge(2, 6);
+            AddEdge(3, 6);
+            AddEdge(3, 7);
+            AddEdge(4, 6);
+            AddEdge(6, 5);
+            AddEdge(5, 8);
+            AddEdge(6, 8);
+        }
+        public void InputSisa()
+        {
+            AddEdge(1, 2);
+            AddEdge(1, 3);
+            AddEdge(1, 4);
+            AddEdge(2, 3);
+            AddEdge(2, 5);
+            AddEdge(2, 6);
+            AddEdge(3, 6);
+            AddEdge(3, 7);
+            AddEdge(4, 6);
+            AddEdge(6, 5);
+            AddEdge(5, 8);
+            AddEdge(2, 6);
+            AddEdge(6, 8);
+        }
+        // Driver Code
+        public void Output()
+        {
+            /*
+            //bind the graph to the viewer 
+            viewer.Graph = graph;
+            //associate the viewer with the form 
+            form.SuspendLayout();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            form.Controls.Add(viewer);
+            form.ResumeLayout();
+            //show the form 
+            form.ShowDialog();
+            */
+            Console.WriteLine(
+                "Following is Depth First Traversal "
+                + "(starting from vertex 2)");
+        }
+
+        public static void Main(String[] args)
+        {
+            //create the graph content 
+            Graph g = new Graph(9);
+            List<int> AL = new List<int>();
+            g.Input();
+            g.Output();
+            AL = g.DFS(AL, 1, 8, 9);
+            Console.Write("\n");
+            Console.WriteLine(AL.Count);
+            for (int i = 0; i < AL.Count - 1; i++)
+            {
+                g.AddEdgeDFS(AL[i], AL[i + 1]);
+
+            }
+            for (int i = 1; i < g.adj.Count(); i++)
+            {
+                Console.Write(i + ": ");
+                foreach (var num in g.adj[i])
+                {
+                    Console.Write(num);
+                    Console.Write(" ");
+                }
+                Console.Write("\n");
+            }
+            //g.InputSisa();
+            Console.Write("AL : ");
+            for(int i = 0; i < AL.Count; i++)
+            {
+                Console.Write(AL[i]);
+                Console.Write(" ");
+            }
+            Console.ReadKey();
+            /*graph.AddEdge("A", "B");
+            graph.AddEdge("B", "C");
+            graph.AddEdge("A", "C").Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+            graph.FindNode("A").Attr.FillColor = Microsoft.Msagl.Drawing.Color.Magenta;
+            graph.FindNode("B").Attr.FillColor = Microsoft.Msagl.Drawing.Color.MistyRose;
+            Microsoft.Msagl.Drawing.Node c = graph.FindNode("C");
+            c.Attr.FillColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
+            c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
+            */
+        }
+    }
 }
