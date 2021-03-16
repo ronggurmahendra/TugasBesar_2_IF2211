@@ -159,6 +159,59 @@ namespace MarkLizardman
             }
         }
 
+        public void BFS(List<int> BL, int v, int target, int node)
+        {
+
+            // Mark all the vertices as not
+            // visited(By default set as false) 
+            List<int> visited = new List<int>();
+
+            // Create a queue for BFS 
+            Queue<int> queue = new Queue<int>();
+
+            // Mark the current node as 
+            // visited and enqueue it 
+            visited.Add(v);
+            if (!BL.Contains(v))
+            {
+                BL.Add(v);
+            }
+            queue.Enqueue(v);
+
+            while (queue.Any())
+            {
+                // Dequeue a vertex from queue 
+                // and print it
+                int s = queue.Dequeue();
+                // Console.Write(s + " ");
+
+                if (!BL.Contains(s))
+                {
+                    BL.Add(s);
+                }
+                //BL.Add(s);
+
+                // Get all adjacent vertices of the 
+                // dequeued vertex s. If a adjacent
+                // has not been visited, then mark it 
+                // visited and enqueue it 
+                List<int> list = adj[s];
+
+                for (int i = 0; i < node; i++)
+                {
+                    if (!visited.Contains(i) && list.Contains(i))
+                    {
+                        visited.Add(i);
+                        queue.Enqueue(i);
+                    }
+                }
+                
+                if (s == target)
+                {
+                    break;
+                }
+            }
+        }
         // A function used by DFS
         public void DFSUtil(List<int> AL, int v, List<int> visited, 
             int target, List<List<int>> road_used, int parent, int it, int node)
@@ -168,7 +221,11 @@ namespace MarkLizardman
             int c = visited.Distinct().Count();
 
             // If all the node is visited return;
-            if (c == node || AL.Contains(target))
+            if (c == node && AL.Contains(target))
+            {
+                return;
+            }
+            if (v == -1 || AL.Count==0)
             {
                 return;
             }
@@ -182,11 +239,16 @@ namespace MarkLizardman
             {
                 AL.Add(v);
             }
+
+            if (AL.Contains(v))
+            {
+                AL.Remove(v);
+            }
             //Console.Write(v + " ");
 
             // Recur for all the vertices
             // adjacent to this vertex
-            List<int> vList = adj[v];
+            List<int> vList = adj.ElementAt(v);
             /*foreach (var n in vList)
             {
                 if (!visited[n])
@@ -196,7 +258,7 @@ namespace MarkLizardman
             {
                 // call the DFs function if not visited
                 if (!visited.Contains(x) && vList.Contains(x))
-                {
+                {                   
                     DFSUtil(AL, x, visited, target, road_used, v, it + 1, node);
                 }
             }
@@ -220,7 +282,6 @@ namespace MarkLizardman
             List<int> visited = new List<int>();
 
             List<List<int>> road_used = new List<List<int>>();
-
             // Call the recursive helper function
             // to print DFS traversal
             DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
@@ -290,58 +351,12 @@ namespace MarkLizardman
             Bucket.OrderBy(lst => lst.Count());
             return Bucket;
         }
-        public void BFS(List<int> BL, int v, int target, int node)
+
+        public List<int> ExploreDFS (int awal, int akhir)
         {
-
-            // Mark all the vertices as not
-            // visited(By default set as false) 
-            List<int> visited = new List<int>();
-
-            // Create a queue for BFS 
-            Queue<int> queue = new Queue<int>();
-
-            // Mark the current node as 
-            // visited and enqueue it 
-            visited.Add(v);
-            if (!BL.Contains(v))
-            {
-                BL.Add(v);
-            }
-            queue.Enqueue(v);
-
-            while (queue.Any())
-            {
-                // Dequeue a vertex from queue 
-                // and print it
-                int s = queue.Dequeue();
-                // Console.Write(s + " ");
-
-                if (!BL.Contains(s))
-                {
-                    BL.Add(s);
-                }
-                //BL.Add(s);
-
-                // Get all adjacent vertices of the 
-                // dequeued vertex s. If a adjacent
-                // has not been visited, then mark it 
-                // visited and enqueue it 
-                List<int> list = adj[s];
-
-                for (int i = 0; i < node; i++)
-                {
-                    if (!visited.Contains(i) && list.Contains(i))
-                    {
-                        visited.Add(i);
-                        queue.Enqueue(i);
-                    }
-                }
-                
-                if (s == target)
-                {
-                    break;
-                }
-            }
+            List<int> bracket = new List<int>();
+            DFS(bracket, awal, akhir, V);
+            return bracket;
         }
         public void InputGraph(List<List<string>> DataNode, Dictionary<int,string> Kamus)
         {
@@ -356,7 +371,6 @@ namespace MarkLizardman
             {
                 adj[i].Sort();
             }
-
 
         }
         // Driver Code
@@ -392,6 +406,8 @@ namespace MarkLizardman
             List<int> BL = new List<int>();
             List<List<int>> RecomDFS = new List<List<int>>();
             List<List<int>> RecomBFS = new List<List<int>>();
+            List<int> ExploreDFS = new List<int>();
+            List<int> ExploreBFS = new List<int>();
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -407,12 +423,13 @@ namespace MarkLizardman
             */
             g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
-            g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
+            /*g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
-            g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
+            */g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
-            RecomDFS = g.RecommendDFS(7);
-            RecomBFS = g.RecommendDFS(0);
+            RecomDFS = g.RecommendDFS(8);
+            RecomBFS = g.RecommendDFS(8);
+            ExploreDFS = g.ExploreDFS(3,8);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
@@ -484,6 +501,28 @@ namespace MarkLizardman
                 }
                 Console.Write("\n");
             }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Eksplore BFS from " + g.TranslatetoString(input.Kamus, 0) + " to " + g.TranslatetoString(input.Kamus, 7));
+            Console.WriteLine("Banyak Koneksi derajat: " + (ExploreDFS.Count-2));
+            if (ExploreDFS.Count > 2)
+            {
+                for (int x = 1; x < ExploreDFS.Count - 1; x++)
+                {
+                    Console.Write(g.TranslatetoString(input.Kamus, ExploreDFS[x]));
+                    Console.Write(" ");
+                }
+            }
+            else if (ExploreDFS.Count == 2)
+            {
+                Console.Write("Sudah berteman, cari yang lain dong!!");
+            }
+            else
+            {
+                Console.Write("Tidak ada jalur koneksi yang tersedia! \n Anda harus memulai koneksi baru itu sendiri. ");
+            }
+            
             Console.ReadKey();
         }
     }
