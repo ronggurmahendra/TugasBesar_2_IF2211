@@ -214,36 +214,35 @@ namespace MarkLizardman
         }
         // A function used by DFS
         public void DFSUtil(List<int> AL, int v, List<int> visited, 
-            int target, List<List<int>> road_used, int parent, int it, int node)
+            int target, List<List<int>> road_used, int parent, int it, int node, bool hapus)
         {
             // Check if all th node is visited or not
             // and count unvisited nodes
             int c = visited.Distinct().Count();
 
             // If all the node is visited return;
-            if (c == node && AL.Contains(target))
+            if (c == node || AL.Contains(target))
             {
                 return;
             }
-            if (v == -1 || AL.Count==0)
+            if (AL.Count==0 && hapus == true )
             {
                 return;
             }
 
             // Mark the current node as visited
             // and print it
-            visited.Add(v);
+            if (!visited.Contains(v))
+            {
+                visited.Add(v);
+            }
             road_used.Add(new List<int>() { parent, v });
             //AL.Add(v);
-            if (!AL.Contains(v))
+            if (!AL.Contains(v) && hapus==false)
             {
                 AL.Add(v);
             }
 
-            if (AL.Contains(v))
-            {
-                AL.Remove(v);
-            }
             //Console.Write(v + " ");
 
             // Recur for all the vertices
@@ -258,9 +257,14 @@ namespace MarkLizardman
             {
                 // call the DFs function if not visited
                 if (!visited.Contains(x) && vList.Contains(x))
-                {                   
-                    DFSUtil(AL, x, visited, target, road_used, v, it + 1, node);
+                {
+                    hapus = false;
+                    DFSUtil(AL, x, visited, target, road_used, v, it + 1, node, hapus);
                 }
+            }
+            if (c == node || AL.Contains(target))
+            {
+                return;
             }
             // Backtrack through the last
             // visited nodes
@@ -268,7 +272,12 @@ namespace MarkLizardman
             {
                 if (road_used[y][1] == v)
                 {
-                    DFSUtil(AL, road_used[y][0], visited, target, road_used, v, it + 1, node);
+                    hapus = true;
+                    if (AL.Contains(v) && hapus == true)
+                    {
+                        AL.Remove(v);
+                    }
+                    DFSUtil(AL, road_used[y][0], visited, target, road_used, v, it + 1, node, hapus);
                 }
             }
         }
@@ -282,9 +291,10 @@ namespace MarkLizardman
             List<int> visited = new List<int>();
 
             List<List<int>> road_used = new List<List<int>>();
+            bool hapus = false;
             // Call the recursive helper function
             // to print DFS traversal
-            DFSUtil(AL, v, visited, target, road_used, -1, 0, node);
+            DFSUtil(AL, v, visited, target, road_used, -1, 0, node, hapus);
             //AL.Add(target);
         }
 
@@ -429,7 +439,7 @@ namespace MarkLizardman
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
             RecomDFS = g.RecommendDFS(8);
             RecomBFS = g.RecommendDFS(8);
-            ExploreDFS = g.ExploreDFS(3,8);
+            ExploreDFS = g.ExploreDFS(8,9);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
