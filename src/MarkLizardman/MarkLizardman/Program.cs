@@ -227,6 +227,47 @@ namespace MarkLizardman
             //AL.Add(target);
         }
 
+        public string TranslatetoString(Dictionary<int,string> kamus, int x)
+        {
+            return kamus.ElementAt(x).Value;
+        }
+        public int TranslatetoInt(Dictionary<int, string> kamus, string y)
+        {
+            return kamus.FirstOrDefault(x => x.Value == y).Key;
+        }
+        public List<List<int>> RecommendDFS(int awal)
+        {
+            List<List<int>> Bucket = new List<List<int>>();
+            for(int i = 0; i < V; i++)
+            {
+                if (i != awal && !adj[i].Contains(awal))
+                {
+                    Bucket.Add(new List<int>());
+                    Bucket.ElementAt(Bucket.Count - 1).Add(i);
+                    //Struktur:
+                    //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
+                    for(int j = 0; j < V; j++)
+                    {
+                        if (j != awal && j != i)
+                        {
+                            if(adj[j].Contains(i) && adj[j].Contains(awal))
+                            {
+                                //Tambahkan friend recommendation
+                                Bucket.ElementAt(Bucket.Count-1).Add(j);
+                            }                           
+                            
+                        }
+                    }
+                }
+                if (Bucket.ElementAt(Bucket.Count - 1).Count == 1)
+                {
+                    //Buang bracket di Count-1
+                    Bucket.Remove(Bucket.ElementAt(Bucket.Count - 1));
+                }
+            }
+            Bucket.OrderBy(lst => lst.Count());
+            return Bucket;
+        }
         public void BFS(List<int> BL, int v, int target, int node)
         {
 
@@ -248,31 +289,31 @@ namespace MarkLizardman
 
             while (queue.Any())
             {
-                    // Dequeue a vertex from queue 
-                    // and print it
-                    int s = queue.Dequeue();
-                    // Console.Write(s + " ");
+                // Dequeue a vertex from queue 
+                // and print it
+                int s = queue.Dequeue();
+                // Console.Write(s + " ");
 
-                    if (!BL.Contains(s))
+                if (!BL.Contains(s))
+                {
+                    BL.Add(s);
+                }
+                //BL.Add(s);
+
+                // Get all adjacent vertices of the 
+                // dequeued vertex s. If a adjacent
+                // has not been visited, then mark it 
+                // visited and enqueue it 
+                List<int> list = adj[s];
+
+                for (int i = 0; i < node; i++)
+                {
+                    if (!visited.Contains(i) && list.Contains(i))
                     {
-                        BL.Add(s);
+                        visited.Add(i);
+                        queue.Enqueue(i);
                     }
-                    //BL.Add(s);
-
-                    // Get all adjacent vertices of the 
-                    // dequeued vertex s. If a adjacent
-                    // has not been visited, then mark it 
-                    // visited and enqueue it 
-                    List<int> list = adj[s];
-
-                    for (int i = 0; i < node; i++)
-                    {
-                        if (!visited.Contains(i) && list.Contains(i))
-                        {
-                            visited.Add(i);
-                            queue.Enqueue(i);
-                        }
-                    }
+                }
                 
                 if (s == target)
                 {
@@ -295,22 +336,6 @@ namespace MarkLizardman
             }
 
 
-        }
-        public void InputSisa()
-        {
-            AddEdge(1, 2);
-            AddEdge(1, 3);
-            AddEdge(1, 4);
-            AddEdge(2, 3);
-            AddEdge(2, 5);
-            AddEdge(2, 6);
-            AddEdge(3, 6);
-            AddEdge(3, 7);
-            AddEdge(4, 6);
-            AddEdge(6, 5);
-            AddEdge(5, 8);
-            AddEdge(2, 6);
-            AddEdge(6, 8);
         }
         // Driver Code
         public void Output()
@@ -343,6 +368,7 @@ namespace MarkLizardman
             Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
             List<int> BL = new List<int>();
+            List<List<int>> RecomDFS = new List<List<int>>();
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -362,6 +388,7 @@ namespace MarkLizardman
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
             g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
+            RecomDFS = g.RecommendDFS(7);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
@@ -382,9 +409,7 @@ namespace MarkLizardman
                 Console.Write("\n");
             }
 
-            //g.InputSisa();
-            Console.Write("AL : ");
-            
+            Console.Write("AL : ");           
             for(int i = 0; i < AL.Count; i++)
             {
                 Console.Write(input.Kamus.ElementAt(AL[i]).Value);
@@ -394,7 +419,6 @@ namespace MarkLizardman
             Console.WriteLine();
 
             Console.Write("BL : ");
-
             for (int i = 0; i < BL.Count; i++)
             {
                 Console.Write(input.Kamus.ElementAt(BL[i]).Value);
@@ -402,6 +426,22 @@ namespace MarkLizardman
                 Console.Write(" ");
             }
 
+            Console.WriteLine();
+
+            Console.Write("Friend Recommendation DFS: \n");
+            for (int x=0; x<RecomDFS.Count; x++)
+            {
+                for(int y = 0; y<RecomDFS[x].Count; y++)
+                {
+                    Console.Write(g.TranslatetoString(input.Kamus, RecomDFS[x][y]));
+                    if (y == 0)
+                    {
+                        Console.Write(":\n");
+                    }
+                    Console.Write(" ");
+                }
+                Console.Write("\n");
+            }
             Console.ReadKey();
         }
     }
