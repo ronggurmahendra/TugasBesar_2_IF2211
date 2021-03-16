@@ -240,10 +240,10 @@ namespace MarkLizardman
             List<List<int>> Bucket = new List<List<int>>();
             for(int i = 0; i < V; i++)
             {
+                Bucket.Add(new List<int>());
+                Bucket.ElementAt(Bucket.Count - 1).Add(i);
                 if (i != awal && !adj[i].Contains(awal))
                 {
-                    Bucket.Add(new List<int>());
-                    Bucket.ElementAt(Bucket.Count - 1).Add(i);
                     //Struktur:
                     //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
                     for(int j = 0; j < V; j++)
@@ -258,6 +258,28 @@ namespace MarkLizardman
                             
                         }
                     }
+                }
+                if (Bucket.ElementAt(Bucket.Count - 1).Count == 1)
+                {
+                    //Buang bracket di Count-1
+                    Bucket.Remove(Bucket.ElementAt(Bucket.Count - 1));
+                }
+            }
+            Bucket.OrderBy(lst => lst.Count());
+            return Bucket;
+        }
+        public List<List<int>> RecommendBFS(int awal)
+        {
+            List<List<int>> Bucket = new List<List<int>>();
+            for (int i = 0; i < V; i++)
+            {
+                if (i != awal && !adj[i].Contains(awal))
+                {
+                    Bucket.Add(new List<int>());
+                    Bucket.ElementAt(Bucket.Count - 1).Add(i);
+                    //Struktur:
+                    //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
+                    BFS(Bucket[i], awal, i, V);
                 }
                 if (Bucket.ElementAt(Bucket.Count - 1).Count == 1)
                 {
@@ -369,6 +391,7 @@ namespace MarkLizardman
             List<int> AL = new List<int>();
             List<int> BL = new List<int>();
             List<List<int>> RecomDFS = new List<List<int>>();
+            List<List<int>> RecomBFS = new List<List<int>>();
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -389,6 +412,7 @@ namespace MarkLizardman
             g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
             RecomDFS = g.RecommendDFS(7);
+            RecomBFS = g.RecommendDFS(0);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
@@ -428,15 +452,33 @@ namespace MarkLizardman
 
             Console.WriteLine();
 
-            Console.Write("Friend Recommendation DFS: \n");
+            Console.WriteLine("Friend Recommendation DFS from " + g.TranslatetoString(input.Kamus, 7));
             for (int x=0; x<RecomDFS.Count; x++)
             {
-                for(int y = 0; y<RecomDFS[x].Count; y++)
+                for (int y = 0; y<RecomDFS[x].Count; y++)
                 {
                     Console.Write(g.TranslatetoString(input.Kamus, RecomDFS[x][y]));
                     if (y == 0)
                     {
                         Console.Write(":\n");
+                        Console.Write(RecomDFS[x].Count-1 + " Mutual friends:");
+                    }
+                    Console.Write(" ");
+                }
+                Console.Write("\n");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("Friend Recommendation BFS from " + g.TranslatetoString(input.Kamus, 0));
+            for (int a = 0; a < RecomBFS.Count; a++)
+            {
+                for (int b = 0; b < RecomBFS[a].Count; b++)
+                {
+                    Console.Write(g.TranslatetoString(input.Kamus, RecomBFS[a][b]));
+                    if (b == 0)
+                    {
+                        Console.Write(":\n");
+                        Console.Write(RecomBFS[a].Count - 1 + " Mutual friends:");
                     }
                     Console.Write(" ");
                 }
