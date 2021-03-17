@@ -147,21 +147,20 @@ namespace MarkLizardman
                 }
             }
             */
-            if(found == false)
+            if (found == false)
             {
-                    var edge2 = graph.AddEdge(v.ToString(), w.ToString());
-                    edge2.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                    edge2.Attr.LineWidth = 3;
-                    edge2.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                    edge2.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                    graph.FindNode(v.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
-                    graph.FindNode(w.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
+                var edge2 = graph.AddEdge(v.ToString(), w.ToString());
+                edge2.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                edge2.Attr.LineWidth = 3;
+                edge2.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                edge2.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                graph.FindNode(v.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
+                graph.FindNode(w.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
             }
         }
 
-        public void BFS(List<int> BL, int v, int target, int node)
+        public void BFS(List<int> BL, int v, int target, Dictionary<int, int> prev, int node)
         {
-
             // Mark all the vertices as not
             // visited(By default set as false) 
             List<int> visited = new List<int>();
@@ -195,17 +194,18 @@ namespace MarkLizardman
                 // dequeued vertex s. If a adjacent
                 // has not been visited, then mark it 
                 // visited and enqueue it 
-                List<int> list = adj[s];
+                List<int> list = adj.ElementAt(s);
 
-                for (int i = 0; i < node; i++)
+                foreach (var n in list)
                 {
-                    if (!visited.Contains(i) && list.Contains(i))
+                    if (!visited.Contains(n) && list.Contains(n))
                     {
-                        visited.Add(i);
-                        queue.Enqueue(i);
+                        prev.Add(n, s);
+                        visited.Add(n);
+                        queue.Enqueue(n);
                     }
                 }
-                
+
                 if (s == target)
                 {
                     break;
@@ -213,7 +213,7 @@ namespace MarkLizardman
             }
         }
         // A function used by DFS
-        public void DFSUtil(List<int> AL, int v, List<int> visited, 
+        public void DFSUtil(List<int> AL, int v, List<int> visited,
             int target, List<List<int>> road_used, int parent, int it, int node, bool hapus)
         {
             // Check if all th node is visited or not
@@ -225,7 +225,7 @@ namespace MarkLizardman
             {
                 return;
             }
-            if (AL.Count==0 && hapus == true )
+            if (AL.Count == 0 && hapus == true)
             {
                 Console.WriteLine("Keluar dari fungsi");
                 return;
@@ -239,7 +239,7 @@ namespace MarkLizardman
             }
             road_used.Add(new List<int>() { parent, v });
             //AL.Add(v);
-            if (!AL.Contains(v) && hapus==false)
+            if (!AL.Contains(v) && hapus == false)
             {
                 AL.Add(v);
             }
@@ -299,7 +299,7 @@ namespace MarkLizardman
             //AL.Add(target);
         }
 
-        public string TranslatetoString(Dictionary<int,string> kamus, int x)
+        public string TranslatetoString(Dictionary<int, string> kamus, int x)
         {
             return kamus.ElementAt(x).Value;
         }
@@ -310,7 +310,7 @@ namespace MarkLizardman
         public List<List<int>> RecommendDFS(int awal)
         {
             List<List<int>> Bucket = new List<List<int>>();
-            for(int i = 0; i < V; i++)
+            for (int i = 0; i < V; i++)
             {
                 Bucket.Add(new List<int>());
                 Bucket.ElementAt(Bucket.Count - 1).Add(i);
@@ -318,16 +318,16 @@ namespace MarkLizardman
                 {
                     //Struktur:
                     //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
-                    for(int j = 0; j < V; j++)
+                    for (int j = 0; j < V; j++)
                     {
                         if (j != awal && j != i)
                         {
-                            if(adj[j].Contains(i) && adj[j].Contains(awal))
+                            if (adj[j].Contains(i) && adj[j].Contains(awal))
                             {
                                 //Tambahkan friend recommendation
-                                Bucket.ElementAt(Bucket.Count-1).Add(j);
-                            }                           
-                            
+                                Bucket.ElementAt(Bucket.Count - 1).Add(j);
+                            }
+
                         }
                     }
                 }
@@ -340,7 +340,7 @@ namespace MarkLizardman
             Bucket.OrderBy(lst => lst.Count());
             return Bucket;
         }
-        public List<List<int>> RecommendBFS(int awal)
+        public List<List<int>> RecommendBFS(int awal, Dictionary<int, int> prev)
         {
             List<List<int>> Bucket = new List<List<int>>();
             for (int i = 0; i < V; i++)
@@ -351,7 +351,7 @@ namespace MarkLizardman
                     Bucket.ElementAt(Bucket.Count - 1).Add(i);
                     //Struktur:
                     //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
-                    BFS(Bucket[i], awal, i, V);
+                    BFS(Bucket[i], awal, i, prev, V);
                 }
                 if (Bucket.ElementAt(Bucket.Count - 1).Count == 1)
                 {
@@ -363,7 +363,7 @@ namespace MarkLizardman
             return Bucket;
         }
 
-        public List<int> ExploreDFS (int awal, int akhir)
+        public List<int> ExploreDFS(int awal, int akhir)
         {
             List<int> bracket = new List<int>();
             DFS(bracket, awal, akhir, V);
@@ -372,21 +372,31 @@ namespace MarkLizardman
 
         public List<int> ExploreBFS(int awal, int akhir)
         {
+            Dictionary<int, int> prev = new Dictionary<int, int>();
             List<int> bracket = new List<int>();
-            BFS(bracket, awal, akhir, V);
-            return bracket;
+            List<int> bracket2 = new List<int>();
+            BFS(bracket, awal, akhir, prev, V);
+            int dari = bracket[bracket.Count - 1];
+            while (dari != awal)
+            {
+                bracket2.Add(dari);
+                dari = prev.FirstOrDefault(x => x.Key == dari).Value;
+            }
+            bracket2.Add(awal);
+            bracket2.Reverse();
+            return bracket2;
         }
 
-        public void InputGraph(List<List<string>> DataNode, Dictionary<int,string> Kamus)
+        public void InputGraph(List<List<string>> DataNode, Dictionary<int, string> Kamus)
         {
             //Console.Write(Kamus.ElementAt(1).Key);
-            
-            foreach(var line in DataNode)
+
+            foreach (var line in DataNode)
             {
                 AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key);
             }
 
-            for (int i=0; i < V; i++)
+            for (int i = 0; i < V; i++)
             {
                 adj[i].Sort();
             }
@@ -411,7 +421,6 @@ namespace MarkLizardman
                 + "(starting from vertex 2)");
             */
         }
-        
     }
     class MainProgram
     {
@@ -422,13 +431,14 @@ namespace MarkLizardman
             //create the graph content 
             Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
+            Dictionary<int, int> prev = new Dictionary<int, int>();
             List<int> BL = new List<int>();
             List<List<int>> RecomDFS = new List<List<int>>();
             List<List<int>> RecomBFS = new List<List<int>>();
             List<int> ExploreDFS = new List<int>();
             List<int> ExploreBFS = new List<int>();
-            int contoh = g.TranslatetoInt(input.Kamus, "A");
-            int contoh2 = g.TranslatetoInt(input.Kamus, "H");
+            int contoh = g.TranslatetoInt(input.Kamus, "I");
+            int contoh2 = g.TranslatetoInt(input.Kamus, "J");
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -444,13 +454,10 @@ namespace MarkLizardman
             */
             g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
-            /*g.DFS(AL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key, 
-                input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
-            */g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
-                input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
-            RecomDFS = g.RecommendDFS(contoh);
-            RecomBFS = g.RecommendDFS(contoh);
-            ExploreDFS = g.ExploreDFS(contoh,contoh2);
+            g.DFS(AL, contoh, contoh2, input.Node);
+            g.BFS(BL, contoh, contoh2, prev, input.Node);
+
+
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
@@ -471,8 +478,8 @@ namespace MarkLizardman
                 Console.Write("\n");
             }
 
-            Console.Write("AL : ");           
-            for(int i = 0; i < AL.Count; i++)
+            Console.Write("AL : ");
+            for (int i = 0; i < AL.Count; i++)
             {
                 Console.Write(input.Kamus.ElementAt(AL[i]).Value);
                 //Console.Write(AL[i]);
@@ -487,25 +494,26 @@ namespace MarkLizardman
                 //Console.Write(BL[i]);
                 Console.Write(" ");
             }
-
             Console.WriteLine();
+            RecomDFS = g.RecommendDFS(contoh);
 
             Console.WriteLine("Friend Recommendation DFS from " + g.TranslatetoString(input.Kamus, contoh));
-            for (int x=0; x<RecomDFS.Count; x++)
+            for (int x = 0; x < RecomDFS.Count; x++)
             {
-                for (int y = 0; y<RecomDFS[x].Count; y++)
+                for (int y = 0; y < RecomDFS[x].Count; y++)
                 {
                     Console.Write(g.TranslatetoString(input.Kamus, RecomDFS[x][y]));
                     if (y == 0)
                     {
                         Console.Write(":\n");
-                        Console.Write(RecomDFS[x].Count-1 + " Mutual friends:");
+                        Console.Write(RecomDFS[x].Count - 1 + " Mutual friends:");
                     }
                     Console.Write(" ");
                 }
                 Console.Write("\n");
             }
             Console.WriteLine();
+            RecomBFS = g.RecommendDFS(contoh);
 
             Console.WriteLine("Friend Recommendation BFS from " + g.TranslatetoString(input.Kamus, contoh));
             for (int a = 0; a < RecomBFS.Count; a++)
@@ -524,26 +532,55 @@ namespace MarkLizardman
             }
 
             Console.WriteLine();
-
-            Console.WriteLine("Eksplore BFS from " + g.TranslatetoString(input.Kamus, contoh) + " to " + g.TranslatetoString(input.Kamus, contoh2));
-            Console.WriteLine("Banyak Koneksi derajat: " + (ExploreDFS.Count-2));
+            ExploreDFS = g.ExploreDFS(contoh, contoh2);
+            Console.WriteLine("Eksplore DFS from " + g.TranslatetoString(input.Kamus, contoh) + " to " + g.TranslatetoString(input.Kamus, contoh2));
+            Console.WriteLine("Banyak Koneksi derajat: " + (ExploreDFS.Count - 2));
             if (ExploreDFS.Count > 2)
             {
-                for (int x = 1; x < ExploreDFS.Count - 1; x++)
+                for (int x = 0; x < ExploreDFS.Count; x++)
                 {
                     Console.Write(g.TranslatetoString(input.Kamus, ExploreDFS[x]));
-                    Console.Write(" ");
+                    if (x != ExploreDFS.Count - 1)
+                    {
+                        Console.Write(" -> ");
+                    }
                 }
             }
             else if (ExploreDFS.Count == 2)
             {
-                Console.Write("Sudah berteman, cari yang lain dong!!");
+                Console.WriteLine("Sudah berteman, cari yang lain dong!!");
             }
             else
             {
-                Console.Write("Tidak ada jalur koneksi yang tersedia! \n Anda harus memulai koneksi baru itu sendiri. ");
+                Console.WriteLine("Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. ");
             }
-            
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            ExploreBFS = g.ExploreBFS(contoh, contoh2);
+
+            Console.WriteLine("Eksplore BFS from " + g.TranslatetoString(input.Kamus, contoh) + " to " + g.TranslatetoString(input.Kamus, contoh2));
+            Console.WriteLine("Banyak Koneksi derajat: " + (ExploreBFS.Count - 2));
+            if (ExploreBFS.Count > 2)
+            {
+                for (int x = 0; x < ExploreBFS.Count; x++)
+                {
+                    Console.Write(g.TranslatetoString(input.Kamus, ExploreBFS[x]));
+                    if (x != ExploreBFS.Count - 1)
+                    {
+                        Console.Write(" -> ");
+                    }
+                }
+            }
+            else if (ExploreBFS.Count == 2)
+            {
+                Console.WriteLine("Sudah berteman, cari yang lain dong!!");
+            }
+            else
+            {
+                Console.WriteLine("Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. ");
+            }
             Console.ReadKey();
         }
     }
