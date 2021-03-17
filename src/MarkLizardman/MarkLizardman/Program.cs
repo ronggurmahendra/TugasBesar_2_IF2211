@@ -227,6 +227,7 @@ namespace MarkLizardman
             }
             if (AL.Count==0 && hapus == true )
             {
+                Console.WriteLine("Keluar dari fungsi");
                 return;
             }
 
@@ -368,6 +369,14 @@ namespace MarkLizardman
             DFS(bracket, awal, akhir, V);
             return bracket;
         }
+
+        public List<int> ExploreBFS(int awal, int akhir)
+        {
+            List<int> bracket = new List<int>();
+            BFS(bracket, awal, akhir, V);
+            return bracket;
+        }
+
         public void InputGraph(List<List<string>> DataNode, Dictionary<int,string> Kamus)
         {
             //Console.Write(Kamus.ElementAt(1).Key);
@@ -418,6 +427,8 @@ namespace MarkLizardman
             List<List<int>> RecomBFS = new List<List<int>>();
             List<int> ExploreDFS = new List<int>();
             List<int> ExploreBFS = new List<int>();
+            int contoh = g.TranslatetoInt(input.Kamus, "A");
+            int contoh2 = g.TranslatetoInt(input.Kamus, "H");
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -437,9 +448,9 @@ namespace MarkLizardman
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
             */g.BFS(BL, input.Kamus.FirstOrDefault(x => x.Value == "A").Key,
                 input.Kamus.FirstOrDefault(x => x.Value == "H").Key, input.Node);
-            RecomDFS = g.RecommendDFS(8);
-            RecomBFS = g.RecommendDFS(8);
-            ExploreDFS = g.ExploreDFS(8,9);
+            RecomDFS = g.RecommendDFS(contoh);
+            RecomBFS = g.RecommendDFS(contoh);
+            ExploreDFS = g.ExploreDFS(contoh,contoh2);
             Console.Write("\n");
             Console.WriteLine(AL.Count);
             /*
@@ -479,7 +490,7 @@ namespace MarkLizardman
 
             Console.WriteLine();
 
-            Console.WriteLine("Friend Recommendation DFS from " + g.TranslatetoString(input.Kamus, 7));
+            Console.WriteLine("Friend Recommendation DFS from " + g.TranslatetoString(input.Kamus, contoh));
             for (int x=0; x<RecomDFS.Count; x++)
             {
                 for (int y = 0; y<RecomDFS[x].Count; y++)
@@ -496,7 +507,7 @@ namespace MarkLizardman
             }
             Console.WriteLine();
 
-            Console.WriteLine("Friend Recommendation BFS from " + g.TranslatetoString(input.Kamus, 0));
+            Console.WriteLine("Friend Recommendation BFS from " + g.TranslatetoString(input.Kamus, contoh));
             for (int a = 0; a < RecomBFS.Count; a++)
             {
                 for (int b = 0; b < RecomBFS[a].Count; b++)
@@ -514,7 +525,7 @@ namespace MarkLizardman
 
             Console.WriteLine();
 
-            Console.WriteLine("Eksplore BFS from " + g.TranslatetoString(input.Kamus, 0) + " to " + g.TranslatetoString(input.Kamus, 7));
+            Console.WriteLine("Eksplore BFS from " + g.TranslatetoString(input.Kamus, contoh) + " to " + g.TranslatetoString(input.Kamus, contoh2));
             Console.WriteLine("Banyak Koneksi derajat: " + (ExploreDFS.Count-2));
             if (ExploreDFS.Count > 2)
             {
