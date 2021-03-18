@@ -426,7 +426,7 @@ namespace MarkLizardman
     {
         public static void Main(String[] args)
         {
-            string filename = @"..\..\graph.txt";
+            string filename = @"D:\git\TugasBesar_2_IF2211\test\graph.txt";
             Input input = new Input(filename);
             //create the graph content 
             Graph g = new Graph(input.Node);
@@ -437,8 +437,8 @@ namespace MarkLizardman
             List<List<int>> RecomBFS = new List<List<int>>();
             List<int> ExploreDFS = new List<int>();
             List<int> ExploreBFS = new List<int>();
-            int contoh = g.TranslatetoInt(input.Kamus, "I");
-            int contoh2 = g.TranslatetoInt(input.Kamus, "J");
+            int contoh = g.TranslatetoInt(input.Kamus, "Leonard");
+            int contoh2 = g.TranslatetoInt(input.Kamus, "Hera");
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
