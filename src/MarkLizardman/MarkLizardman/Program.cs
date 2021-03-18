@@ -8,7 +8,9 @@ namespace MarkLizardman
     {
         public static void Main(String[] args)
         {
-            string filename = @"D:\git\TugasBesar_2_IF2211\test\graph.txt";
+            string filename;
+            if(args.Length == 1) filename = args[0];
+            else filename = @"../../graph.txt";
             Input input = new Input(filename);
             //create the graph content 
             Graph g = new Graph(input.Node);
