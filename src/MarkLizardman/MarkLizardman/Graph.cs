@@ -261,8 +261,8 @@ namespace MarkLizardman{
                     Bucket.Remove(Bucket.ElementAt(Bucket.Count - 1));
                 }
             }
-            Bucket.OrderBy(lst => lst.Count());
-            return Bucket;
+            List<List<int>> NewBucket = Bucket.OrderByDescending(x => x.Count).ThenBy(x => x[1]).ToList();
+            return NewBucket;
         }
         public List<List<int>> RecommendBFS(int awal)
         {
@@ -307,8 +307,8 @@ namespace MarkLizardman{
                     List2.Clear();
                 }
             }
-            Bucket.OrderBy(lst => lst.Count());
-            return Bucket;
+            List<List<int>> NewBucket = Bucket.OrderByDescending(x => x.Count).ThenBy(x => x[1]).ToList();
+            return NewBucket;
         }
 
         public List<int> ExploreDFS(int awal, int akhir)
