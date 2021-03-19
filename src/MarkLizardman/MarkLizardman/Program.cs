@@ -15,14 +15,15 @@ namespace MarkLizardman
             //create the graph content 
             Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
-            Dictionary<int, int> prev = new Dictionary<int, int>();
+            Dictionary<int, int> BD = new Dictionary<int, int>();
+            Dictionary<int, int> prev2 = new Dictionary<int, int>();
             List<int> BL = new List<int>();
             List<List<int>> RecomDFS = new List<List<int>>();
             List<List<int>> RecomBFS = new List<List<int>>();
             List<int> ExploreDFS = new List<int>();
             List<int> ExploreBFS = new List<int>();
-            int contoh = g.TranslatetoInt(input.Kamus, "Leonard");
-            int contoh2 = g.TranslatetoInt(input.Kamus, "Hera");
+            int contoh = g.TranslatetoInt(input.Kamus, "A");
+            int contoh2 = g.TranslatetoInt(input.Kamus, "H");
             /*foreach (var key in input.Kamus)
             {
                 Console.Write(key.Key);
@@ -39,7 +40,7 @@ namespace MarkLizardman
             g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
             g.DFS(AL, contoh, contoh2, input.Node);
-            g.BFS(BL, contoh, contoh2, prev, input.Node);
+            g.BFS(BL, contoh, contoh2, input.Node);
 
 
             Console.Write("\n");
@@ -97,7 +98,8 @@ namespace MarkLizardman
                 Console.Write("\n");
             }
             Console.WriteLine();
-            RecomBFS = g.RecommendDFS(contoh);
+
+            RecomBFS = g.RecommendBFS(contoh);
 
             Console.WriteLine("Friend Recommendation BFS from " + g.TranslatetoString(input.Kamus, contoh));
             for (int a = 0; a < RecomBFS.Count; a++)

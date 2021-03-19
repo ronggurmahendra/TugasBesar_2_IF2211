@@ -81,8 +81,9 @@ namespace MarkLizardman{
             }
         }
 
-        public void BFS(List<int> BL, int v, int target, Dictionary<int, int> prev, int node)
+        public Dictionary<int, int> BFS(List<int> BL, int v, int target , int node)
         {
+            Dictionary<int, int> prev = new Dictionary<int, int>();
             // Mark all the vertices as not
             // visited(By default set as false) 
             List<int> visited = new List<int>();
@@ -133,6 +134,7 @@ namespace MarkLizardman{
                     break;
                 }
             }
+            return prev;
         }
         // A function used by DFS
         public void DFSUtil(List<int> AL, int v, List<int> visited,
@@ -262,23 +264,47 @@ namespace MarkLizardman{
             Bucket.OrderBy(lst => lst.Count());
             return Bucket;
         }
-        public List<List<int>> RecommendBFS(int awal, Dictionary<int, int> prev)
+        public List<List<int>> RecommendBFS(int awal)
         {
+            //Komparasi 2 array hasil dfs first degree
+            //
             List<List<int>> Bucket = new List<List<int>>();
+            
+            Dictionary<int, int> previous = new Dictionary<int, int>();
+            Dictionary<int, int> previous2 = new Dictionary<int, int>();
             for (int i = 0; i < V; i++)
             {
                 if (i != awal && !adj[i].Contains(awal))
                 {
+                    List<int> arr1 = new List<int>();
+                    List<int> arr2 = new List<int>();
                     Bucket.Add(new List<int>());
                     Bucket.ElementAt(Bucket.Count - 1).Add(i);
                     //Struktur:
                     //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
-                    BFS(Bucket[i], awal, i, prev, V);
-                }
-                if (Bucket.ElementAt(Bucket.Count - 1).Count == 1)
-                {
-                    //Buang bracket di Count-1
-                    Bucket.Remove(Bucket.ElementAt(Bucket.Count - 1));
+                    previous = BFS(arr1, awal, i, V);
+                    previous2 = BFS(arr2, i, awal, V);
+                    List<int> List1 = previous.Where(x => x.Value == awal)
+                      .Select(x => x.Key)
+                      .ToList();
+                    List<int> List2 = previous2.Where(x => x.Value == i)
+                      .Select(x => x.Key)
+                      .ToList();
+                    IEnumerable<int> res = List1.AsQueryable().Intersect(List2);
+                    foreach (var x in res)
+                    {
+                        if (x != awal && x != i)
+                        {
+                            Bucket.ElementAt(Bucket.Count - 1).Add(x);
+                        }
+                    }
+                    if (Bucket.ElementAt(Bucket.Count - 1).Count == 1)
+                    {
+                        //Buang bracket di Count-1
+                        Bucket.Remove(Bucket.ElementAt(Bucket.Count - 1));
+                    }
+                    List1.Clear();
+                    List2.Clear();
                 }
             }
             Bucket.OrderBy(lst => lst.Count());
@@ -297,7 +323,7 @@ namespace MarkLizardman{
             Dictionary<int, int> prev = new Dictionary<int, int>();
             List<int> bracket = new List<int>();
             List<int> bracket2 = new List<int>();
-            BFS(bracket, awal, akhir, prev, V);
+            prev = BFS(bracket, awal, akhir, V);
             int dari = bracket[bracket.Count - 1];
             while (dari != awal)
             {
