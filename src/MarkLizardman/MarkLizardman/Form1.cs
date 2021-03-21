@@ -12,6 +12,10 @@ namespace MarkLizardman
 {
     public partial class Form1 : Form
     {
+        private Input input;
+        private Graph g;
+        private Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer;
+
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +34,26 @@ namespace MarkLizardman
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void selectFile_pressed(object sender, EventArgs e){
+            String filename;
+            if(ofd.ShowDialog() == DialogResult.OK){
+                filename = ofd.FileName;
+                this.textBox1.Text = filename;
+                // parse input
+                input = new Input(filename);
+                // initialize graph
+                g = new Graph(input.Node);
+                g.InputGraph(input.DataNode, input.Kamus);
+                this.renderGraph();
+                // clear combobox
+                this.comboBox1.Items.Clear();
+                this.comboBox2.Items.Clear();
+                // add nodes to combobox
+                this.comboBox1.Items.AddRange(input.Kamus.Values.ToArray());
+                this.comboBox2.Items.AddRange(input.Kamus.Values.ToArray());
+            }
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -77,9 +101,46 @@ namespace MarkLizardman
 
         }
 
+        private void button1_Click(object sender, EventArgs eventArgs){
+            String from, to = null;
+            if(this.comboBox1.SelectedItem == null) return;
+            from = this.comboBox1.SelectedItem.ToString();
+            if(this.comboBox2.SelectedItem != null) to = this.comboBox2.SelectedItem.ToString();
+            List<int> con = null;
+            List<List<int>> recom = new List<List<int>>();
+            if(this.radioButton1.Checked){
+                // dfs
+                if(to != null)
+                    con = this.g.ExploreDFS(g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
+            }
+            else if(this.radioButton2.Checked){
+                // bfs
+                if(to != null)
+                    con = this.g.ExploreBFS(this.g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
+            }
+            else {
+                // neither
+                return;
+            }
+            for(int i = 0; i < con.Count-1; i++){
+                g.ColorEdge(con[i], con[i+1], this.input.Kamus);
+            }
+            this.renderGraph();
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void renderGraph(){
+            // render graph
+            // render using bitmap rendering, not realtime :(
+            // TODO: attach GDIViewer to a panel?
+            renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(g.GetGraph());
+            Bitmap b = new Bitmap(pictureBox1.Width, pictureBox1.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            renderer.Render(b);
+            pictureBox1.Image = b;
         }
     }
 }

@@ -31,6 +31,7 @@ namespace MarkLizardman
         {
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.selectfile = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -63,6 +64,15 @@ namespace MarkLizardman
             this.textBox1.Size = new System.Drawing.Size(179, 22);
             this.textBox1.TabIndex = 3;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            //
+            // selectFile
+            //
+            this.selectfile.Location = new System.Drawing.Point(387, 62);
+            this.selectfile.Name = "selectfile";
+            this.selectfile.Text = "Select File";
+            this.selectfile.Size = new System.Drawing.Size(100, 24);
+            this.textBox1.TabIndex = 4;
+            this.selectfile.Click += new System.EventHandler(this.selectFile_pressed);
             // 
             // label2
             // 
@@ -136,6 +146,7 @@ namespace MarkLizardman
             this.button1.TabIndex = 13;
             this.button1.Text = "Submit";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(button1_Click);
             // 
             // linkLabel1
             // 
@@ -200,18 +211,23 @@ namespace MarkLizardman
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.selectfile);
             this.Name = "Form1";
             this.Text = "MarkLizardman";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            ofd = new System.Windows.Forms.OpenFileDialog();
+            ofd.Filter = "txt files(*.txt)|*.txt|All files (*.*)|*.*";
+            ofd.FilterIndex = 2;
+            ofd.RestoreDirectory = true;
         }
 
         #endregion
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button selectfile;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -224,6 +240,7 @@ namespace MarkLizardman
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.OpenFileDialog ofd;
     }
 }
 
