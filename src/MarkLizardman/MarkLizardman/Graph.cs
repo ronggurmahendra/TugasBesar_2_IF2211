@@ -6,12 +6,7 @@ namespace MarkLizardman
 {
     class Graph
     {
-        //create a form 
-        System.Windows.Forms.Form form = new System.Windows.Forms.Form();
-        //create a viewer object 
-        Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-        //create a graph object 
-        public Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
+        Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
         private int V; // No. of vertices
 
         // Array of lists for
