@@ -36,7 +36,6 @@ namespace MarkLizardman
                 Console.WriteLine();
             }
             */
-            g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
             Dictionary<int, List<int>> hasil = g.DFS(AL, contoh, contoh2, input.Node);
             Console.Write("AL Count: " + hasil.Count);
@@ -167,7 +166,7 @@ namespace MarkLizardman
             {
                 Console.WriteLine("Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. ");
             }
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }

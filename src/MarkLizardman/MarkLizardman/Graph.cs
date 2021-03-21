@@ -11,7 +11,7 @@ namespace MarkLizardman
         //create a viewer object 
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
         //create a graph object 
-        Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
+        public Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
         private int V; // No. of vertices
 
         // Array of lists for
@@ -27,74 +27,38 @@ namespace MarkLizardman
                 adj[i] = new List<int>();
         }
 
-        public Graph CopyGraph(Graph g)
+        public void ColorEdge(int v, int w, Dictionary<int, String> Kamus)
         {
-            Graph g2 = new Graph(g.V);
-            g2.V = g.V;
-            for (int i = 0; i < g.V; ++i)
+            Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
+            Microsoft.Msagl.Drawing.Node nw = graph.FindNode(Kamus[w]);
+            if (nv == null || nw == null) return;
+            foreach (Microsoft.Msagl.Drawing.Edge e in nv.Edges)
             {
-                g2.adj[i] = new List<int>();
-                for (int j = 0; j < g.adj.ElementAt(i).Count; j++)
+                if ((e.SourceNode == nv && e.TargetNode == nw) ||
+                   (e.SourceNode == nw && e.TargetNode == nv))
                 {
-                    g2.adj.ElementAt(i).Add(g.adj.ElementAt(i).ElementAt(j));
+                    nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
+                    nw.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
+                    e.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                    break;
                 }
             }
-            return g2;
+        }
+
+        public Microsoft.Msagl.Drawing.Graph GetGraph()
+        {
+            return this.graph;
         }
 
         // Function to Add an edge into the graph
-        void AddEdge(int v, int w)
+        void AddEdge(int v, int w, Dictionary<int, String> Kamus)
         {
             //JANGAN LUPA
             adj[v].Add(w); // Add w to v's list.
             adj[w].Add(v);
-            /*bool found = false;
-            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
-            {
-                if (!found)
-                {
-                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
-                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
-                    {
-                        found = true;
-                    }
-                }
-            }
-            if (found == false)
-            {
-                var edge = graph.AddEdge(v.ToString(), w.ToString());
-                edge.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
-                edge.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                edge.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
-            }*/
-        }
-
-        void AddEdgeDFS(int v, int w)
-        {
-            bool found = false;
-            /*
-            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
-            {
-                if (!found)
-                {
-                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
-                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
-                    {
-                        found = true;
-                    }
-                }
-            }
-            */
-            if (found == false)
-            {
-                var edge2 = graph.AddEdge(v.ToString(), w.ToString());
-                edge2.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                edge2.Attr.LineWidth = 3;
-                edge2.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                edge2.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
-                graph.FindNode(v.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
-                graph.FindNode(w.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
-            }
+            Microsoft.Msagl.Drawing.Edge e = graph.AddEdge(Kamus[v], Kamus[w]);
+            e.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+            e.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
         }
 
         public Dictionary<int, int> BFS(List<int> BL, int v, int target, int node)
@@ -160,6 +124,7 @@ namespace MarkLizardman
             }
             return prev;
         }
+
         // A function used by DFS
         public void DFSUtil(List<int> AL, int v, List<int> visited,
             int target, List<List<int>> road_used, int parent, int it, int node, bool hapus)
@@ -379,7 +344,7 @@ namespace MarkLizardman
 
             foreach (var line in DataNode)
             {
-                AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key);
+                AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key, Kamus);
             }
 
             for (int i = 0; i < V; i++)
