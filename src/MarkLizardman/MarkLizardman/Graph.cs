@@ -2,9 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MarkLizardman{
+namespace MarkLizardman
+{
     class Graph
     {
+        //create a form 
+        System.Windows.Forms.Form form = new System.Windows.Forms.Form();
+        //create a viewer object 
+        Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
         //create a graph object 
         Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
         private int V; // No. of vertices
@@ -22,35 +27,79 @@ namespace MarkLizardman{
                 adj[i] = new List<int>();
         }
 
+        public Graph CopyGraph(Graph g)
+        {
+            Graph g2 = new Graph(g.V);
+            g2.V = g.V;
+            for (int i = 0; i < g.V; ++i)
+            {
+                g2.adj[i] = new List<int>();
+                for (int j = 0; j < g.adj.ElementAt(i).Count; j++)
+                {
+                    g2.adj.ElementAt(i).Add(g.adj.ElementAt(i).ElementAt(j));
+                }
+            }
+            return g2;
+        }
+
         // Function to Add an edge into the graph
-        void AddEdge(int v, int w, Dictionary<int, String> Kamus)
+        void AddEdge(int v, int w)
         {
             //JANGAN LUPA
             adj[v].Add(w); // Add w to v's list.
             adj[w].Add(v);
-            Microsoft.Msagl.Drawing.Edge e = graph.AddEdge(Kamus[v], Kamus[w]);
-            e.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
-            e.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+            /*bool found = false;
+            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
+            {
+                if (!found)
+                {
+                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
+                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
+                    {
+                        found = true;
+                    }
+                }
+            }
+            if (found == false)
+            {
+                var edge = graph.AddEdge(v.ToString(), w.ToString());
+                edge.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+                edge.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                edge.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+            }*/
         }
 
-        public void ColorEdge(int v, int w, Dictionary<int, String> Kamus)
+        void AddEdgeDFS(int v, int w)
         {
-            Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
-            Microsoft.Msagl.Drawing.Node nw = graph.FindNode(Kamus[w]);
-            if(nv == null || nw == null) return;
-            foreach(Microsoft.Msagl.Drawing.Edge e in nv.Edges){
-                if((e.SourceNode == nv && e.TargetNode == nw) || 
-                   (e.SourceNode == nw && e.TargetNode == nv)){
-                       nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
-                       nw.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
-                       e.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                       break;
-                   }
+            bool found = false;
+            /*
+            foreach (Microsoft.Msagl.Drawing.Edge e in graph.Edges)
+            {
+                if (!found)
+                {
+                    if ((e.SourceNode == graph.FindNode(v.ToString()) && e.SourceNode == graph.FindNode(w.ToString())) ||
+                    (e.SourceNode == graph.FindNode(w.ToString()) && e.SourceNode == graph.FindNode(v.ToString())))
+                    {
+                        found = true;
+                    }
+                }
+            }
+            */
+            if (found == false)
+            {
+                var edge2 = graph.AddEdge(v.ToString(), w.ToString());
+                edge2.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                edge2.Attr.LineWidth = 3;
+                edge2.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                edge2.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
+                graph.FindNode(v.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
+                graph.FindNode(w.ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
             }
         }
 
-        public Dictionary<int, int> BFS(List<int> BL, int v, int target , int node)
+        public Dictionary<int, int> BFS(List<int> BL, int v, int target, int node)
         {
+            bool ketemu = false;
             Dictionary<int, int> prev = new Dictionary<int, int>();
             // Mark all the vertices as not
             // visited(By default set as false) 
@@ -70,6 +119,11 @@ namespace MarkLizardman{
 
             while (queue.Any())
             {
+                if (queue.Peek() == target)
+                {
+                    ketemu = true;
+                    break;
+                }
                 // Dequeue a vertex from queue 
                 // and print it
                 int s = queue.Dequeue();
@@ -79,7 +133,6 @@ namespace MarkLizardman{
                 {
                     BL.Add(s);
                 }
-                //BL.Add(s);
 
                 // Get all adjacent vertices of the 
                 // dequeued vertex s. If a adjacent
@@ -96,11 +149,14 @@ namespace MarkLizardman{
                         queue.Enqueue(n);
                     }
                 }
-
-                if (s == target)
-                {
-                    break;
-                }
+            }
+            if (!BL.Contains(target) && ketemu)
+            {
+                BL.Add(target);
+            }
+            else
+            {
+                BL.Clear();
             }
             return prev;
         }
@@ -119,7 +175,6 @@ namespace MarkLizardman{
             }
             if (AL.Count == 0 && hapus == true)
             {
-                Console.WriteLine("Keluar dari fungsi");
                 return;
             }
 
@@ -177,10 +232,11 @@ namespace MarkLizardman{
 
         // The function to do DFS traversal.
         // It uses recursive DFSUtil()
-        public void DFS(List<int> AL, int v, int target, int node)
+        public Dictionary<int, List<int>> DFS(List<int> AL, int v, int target, int node)
         {
             // Mark all the vertices as not visited
             // (set as false by default in c#)
+            Dictionary<int, List<int>> child = new Dictionary<int, List<int>>();
             List<int> visited = new List<int>();
 
             List<List<int>> road_used = new List<List<int>>();
@@ -189,6 +245,16 @@ namespace MarkLizardman{
             // to print DFS traversal
             DFSUtil(AL, v, visited, target, road_used, -1, 0, node, hapus);
             //AL.Add(target);
+            foreach (var value in AL)
+            {
+                List<int> masuk = new List<int> { value };
+                foreach (var x in adj[value])
+                {
+                    masuk.Add(x);
+                }
+                child.Add(value, masuk);
+            }
+            return child;
         }
 
         public string TranslatetoString(Dictionary<int, string> kamus, int x)
@@ -201,25 +267,24 @@ namespace MarkLizardman{
         }
         public List<List<int>> RecommendDFS(int awal)
         {
+            List<int> AL1 = new List<int>();
             List<List<int>> Bucket = new List<List<int>>();
             for (int i = 0; i < V; i++)
             {
-                Bucket.Add(new List<int>());
-                Bucket.ElementAt(Bucket.Count - 1).Add(i);
-                if (i != awal && !adj[i].Contains(awal))
+                Bucket.Add(new List<int> { i });
+                if (i != awal && !adj[awal].Contains(i))
                 {
-                    //Struktur:
-                    //Huruf Rekomendasi: Mutual friend 1 - Mutual friend 2 - dll
-                    for (int j = 0; j < V; j++)
+                    Dictionary<int, List<int>> hasil = DFS(AL1, awal, i, V);
+                    if (hasil.Count > 0)
                     {
-                        if (j != awal && j != i)
+                        List<int> child = new List<int>();
+                        child = hasil.First(x => x.Key == awal).Value;
+                        List<int> child2 = hasil.FirstOrDefault(x => x.Key == i).Value;
+                        IEnumerable<int> res = child.AsQueryable().Intersect(child2);
+                        //Tambahkan friend recommendation
+                        foreach (var masukkin in res)
                         {
-                            if (adj[j].Contains(i) && adj[j].Contains(awal))
-                            {
-                                //Tambahkan friend recommendation
-                                Bucket.ElementAt(Bucket.Count - 1).Add(j);
-                            }
-
+                            Bucket.ElementAt(Bucket.Count - 1).Add(masukkin);
                         }
                     }
                 }
@@ -232,12 +297,13 @@ namespace MarkLizardman{
             List<List<int>> NewBucket = Bucket.OrderByDescending(x => x.Count).ThenBy(x => x[1]).ToList();
             return NewBucket;
         }
+
         public List<List<int>> RecommendBFS(int awal)
         {
             //Komparasi 2 array hasil dfs first degree
             //
             List<List<int>> Bucket = new List<List<int>>();
-            
+
             Dictionary<int, int> previous = new Dictionary<int, int>();
             Dictionary<int, int> previous2 = new Dictionary<int, int>();
             for (int i = 0; i < V; i++)
@@ -282,9 +348,10 @@ namespace MarkLizardman{
         public List<int> ExploreDFS(int awal, int akhir)
         {
             List<int> bracket = new List<int>();
-            DFS(bracket, awal, akhir, V);
+            _ = DFS(bracket, awal, akhir, V);
             return bracket;
         }
+
 
         public List<int> ExploreBFS(int awal, int akhir)
         {
@@ -292,14 +359,17 @@ namespace MarkLizardman{
             List<int> bracket = new List<int>();
             List<int> bracket2 = new List<int>();
             prev = BFS(bracket, awal, akhir, V);
-            int dari = bracket[bracket.Count - 1];
-            while (dari != awal)
+            if (bracket.Count > 0)
             {
-                bracket2.Add(dari);
-                dari = prev.FirstOrDefault(x => x.Key == dari).Value;
+                int dari = bracket[bracket.Count - 1];
+                while (dari != awal)
+                {
+                    bracket2.Add(dari);
+                    dari = prev.FirstOrDefault(x => x.Key == dari).Value;
+                }
+                bracket2.Add(awal);
+                bracket2.Reverse();
             }
-            bracket2.Add(awal);
-            bracket2.Reverse();
             return bracket2;
         }
 
@@ -309,7 +379,7 @@ namespace MarkLizardman{
 
             foreach (var line in DataNode)
             {
-                AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key, Kamus);
+                AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key);
             }
 
             for (int i = 0; i < V; i++)
@@ -317,29 +387,25 @@ namespace MarkLizardman{
                 adj[i].Sort();
             }
 
-
-        }
-
-        public Microsoft.Msagl.Drawing.Graph GetGraph(){
-            return this.graph;
         }
         // Driver Code
-        // public void Output(Dictionary<int, String> Kamus)
-        // {
-        //     ColorEdge(0, 1, Kamus);
-        //     //bind the graph to the viewer 
-        //     viewer.Graph = graph;
-        //     //associate the viewer with the form 
-        //     form.SuspendLayout();
-        //     viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-        //     form.Controls.Add(viewer);
-        //     form.ResumeLayout();
-        //     //show the form 
-        //     form.ShowDialog();
-        //     /*Console.WriteLine(
-        //         "Following is Depth First Traversal "
-        //         + "(starting from vertex 2)");
-        //     */
-        // }
+        public void Output()
+        {
+            /*
+            //bind the graph to the viewer 
+            viewer.Graph = graph;
+            //associate the viewer with the form 
+            form.SuspendLayout();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            form.Controls.Add(viewer);
+            form.ResumeLayout();
+            //show the form 
+            form.ShowDialog();
+            */
+            /*Console.WriteLine(
+                "Following is Depth First Traversal "
+                + "(starting from vertex 2)");
+            */
+        }
     }
 }

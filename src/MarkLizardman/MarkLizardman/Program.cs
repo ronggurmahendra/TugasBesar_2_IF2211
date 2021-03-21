@@ -9,20 +9,19 @@ namespace MarkLizardman
         public static void Main(String[] args)
         {
             string filename;
-            if(args.Length == 1) filename = args[0];
+            if (args.Length == 1) filename = args[0];
             else filename = @"../../graph.txt";
             Input input = new Input(filename);
             //create the graph content 
             Graph g = new Graph(input.Node);
             List<int> AL = new List<int>();
             Dictionary<int, int> BD = new Dictionary<int, int>();
-            Dictionary<int, int> prev2 = new Dictionary<int, int>();
             List<int> BL = new List<int>();
             List<List<int>> RecomDFS = new List<List<int>>();
             List<List<int>> RecomBFS = new List<List<int>>();
             List<int> ExploreDFS = new List<int>();
             List<int> ExploreBFS = new List<int>();
-            int contoh = g.TranslatetoInt(input.Kamus, "A");
+            int contoh = g.TranslatetoInt(input.Kamus, "D");
             int contoh2 = g.TranslatetoInt(input.Kamus, "H");
             /*foreach (var key in input.Kamus)
             {
@@ -39,7 +38,8 @@ namespace MarkLizardman
             */
             g.Output();
             g.InputGraph(input.DataNode, input.Kamus);
-            g.DFS(AL, contoh, contoh2, input.Node);
+            Dictionary<int, List<int>> hasil = g.DFS(AL, contoh, contoh2, input.Node);
+            Console.Write("AL Count: " + hasil.Count);
             g.BFS(BL, contoh, contoh2, input.Node);
 
 
@@ -80,8 +80,8 @@ namespace MarkLizardman
                 Console.Write(" ");
             }
             Console.WriteLine();
-            RecomDFS = g.RecommendDFS(contoh);
 
+            RecomDFS = g.RecommendDFS(contoh);
             Console.WriteLine("Friend Recommendation DFS from " + g.TranslatetoString(input.Kamus, contoh));
             for (int x = 0; x < RecomDFS.Count; x++)
             {
@@ -120,9 +120,9 @@ namespace MarkLizardman
             Console.WriteLine();
             ExploreDFS = g.ExploreDFS(contoh, contoh2);
             Console.WriteLine("Eksplore DFS from " + g.TranslatetoString(input.Kamus, contoh) + " to " + g.TranslatetoString(input.Kamus, contoh2));
-            Console.WriteLine("Banyak Koneksi derajat: " + (ExploreDFS.Count - 2));
             if (ExploreDFS.Count > 2)
             {
+                Console.WriteLine("Banyak Koneksi derajat: " + (ExploreDFS.Count - 2));
                 for (int x = 0; x < ExploreDFS.Count; x++)
                 {
                     Console.Write(g.TranslatetoString(input.Kamus, ExploreDFS[x]));
@@ -147,9 +147,9 @@ namespace MarkLizardman
             ExploreBFS = g.ExploreBFS(contoh, contoh2);
 
             Console.WriteLine("Eksplore BFS from " + g.TranslatetoString(input.Kamus, contoh) + " to " + g.TranslatetoString(input.Kamus, contoh2));
-            Console.WriteLine("Banyak Koneksi derajat: " + (ExploreBFS.Count - 2));
             if (ExploreBFS.Count > 2)
             {
+                Console.WriteLine("Banyak Koneksi derajat: " + (ExploreBFS.Count - 2));
                 for (int x = 0; x < ExploreBFS.Count; x++)
                 {
                     Console.Write(g.TranslatetoString(input.Kamus, ExploreBFS[x]));
