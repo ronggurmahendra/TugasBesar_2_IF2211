@@ -100,17 +100,12 @@ namespace MarkLizardman
                 // Dequeue a vertex from queue 
                 // and print it
                 int s = queue.Dequeue();
-                // Console.Write(s + " ");
 
                 if (!BL.Contains(s))
                 {
                     BL.Add(s);
                 }
 
-                // Get all adjacent vertices of the 
-                // dequeued vertex s. If a adjacent
-                // has not been visited, then mark it 
-                // visited and enqueue it 
                 List<int> list = adj.ElementAt(s);
 
                 foreach (var n in list)
@@ -159,22 +154,14 @@ namespace MarkLizardman
                 visited.Add(v);
             }
             road_used.Add(new List<int>() { parent, v });
-            //AL.Add(v);
             if (!AL.Contains(v) && hapus == false)
             {
                 AL.Add(v);
             }
 
-            //Console.Write(v + " ");
-
             // Recur for all the vertices
             // adjacent to this vertex
             List<int> vList = adj.ElementAt(v);
-            /*foreach (var n in vList)
-            {
-                if (!visited[n])
-                    AL = DFSUtil(AL, n, visited);
-            }*/
             for (int x = 0; x < node; x++)
             {
                 // call the DFs function if not visited
@@ -367,25 +354,6 @@ namespace MarkLizardman
                 adj[i].Sort();
             }
 
-        }
-        // Driver Code
-        public void Output()
-        {
-            /*
-            //bind the graph to the viewer 
-            viewer.Graph = graph;
-            //associate the viewer with the form 
-            form.SuspendLayout();
-            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            form.Controls.Add(viewer);
-            form.ResumeLayout();
-            //show the form 
-            form.ShowDialog();
-            */
-            /*Console.WriteLine(
-                "Following is Depth First Traversal "
-                + "(starting from vertex 2)");
-            */
         }
     }
 }
