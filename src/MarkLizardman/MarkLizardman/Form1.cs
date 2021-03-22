@@ -14,7 +14,8 @@ namespace MarkLizardman
     {
         private Input input;
         private Graph g;
-        private Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer;
+        // private Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer;
+        private Microsoft.Msagl.GraphViewerGdi.GViewer viewer;
         private String filename;
 
         public Form1()
@@ -46,6 +47,8 @@ namespace MarkLizardman
                 // initialize graph
                 g = new Graph(input.Node);
                 g.InputGraph(input.DataNode, input.Kamus);
+                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+                panel1.Controls.Add(viewer);
                 this.renderGraph();
                 // clear combobox
                 this.comboBox1.Items.Clear();
@@ -103,7 +106,7 @@ namespace MarkLizardman
         }
 
         private void button1_Click(object sender, EventArgs eventArgs){
-            String from, to = null;
+            String from, to = null, warna = "";
             filename = ofd.FileName;
             this.textBox1.Text = filename;
             // parse input
@@ -112,7 +115,7 @@ namespace MarkLizardman
             g = new Graph(input.Node);
             g.InputGraph(input.DataNode, input.Kamus);
             this.renderGraph();
-            if (this.comboBox1.SelectedItem == null || comboBox1.SelectedItem == "")
+            if (this.comboBox1.SelectedItem == null || comboBox1.SelectedItem.ToString() == "")
             {
                 this.label6.Text = "Mohon Ambil --Choose Account-- terlebih dahulu agar bisa diproses";
                 return;
@@ -130,55 +133,14 @@ namespace MarkLizardman
                     //explore dfs
                     con = this.g.ExploreDFS(g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
                     this.label6.Text += "Eksplor DFS from " + from + " to " + to + "\n";
-                    if (con.Count > 2)
-                    {
-                        label6.Text += "Derajat Koneksi: " + (con.Count - 2) + "\n";
-                        for (int x = 0; x < con.Count; x++)
-                        {
-                            label6.Text += (g.TranslatetoString(input.Kamus, con[x]));
-                            if (x != con.Count - 1)
-                            {
-                                label6.Text += " -> ";
-                            }
-                        }
-                    }
-                    else if (con.Count == 2)
-                    {
-                        this.label6.Text += "Sudah berteman, cari yang lain dong!!" + "\n";
-                    }
-                    else
-                    {
-                        this.label6.Text += "Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. " + "\n";
-                    }
-                    for (int i = 0; i < con.Count - 1; i++)
-                    {
-                        g.ColorEdge(con[i], con[i + 1], this.input.Kamus);
-                    }
                 }
                 else
                 {
                     //recomDFS
                     recom = this.g.RecommendDFS(g.TranslatetoInt(this.input.Kamus, from));
                     g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), input.Kamus, "Green");
+                    warna = "Orange";
                     this.label6.Text += "Friend Recommendation DFS from " + from + " \n";
-                    for (int x = 0; x < recom.Count; x++)
-                    {
-                        for (int y = 0; y < recom[x].Count; y++)
-                        {
-                            this.label6.Text += g.TranslatetoString(input.Kamus, recom[x][y]);
-                            if (y == 0)
-                            {
-                                this.label6.Text += ":\n";
-                                this.label6.Text += "     " + (recom[x].Count-1) + " Mutual friends: ";
-                                g.ColorNode(recom[x][0], input.Kamus, "Orange");
-                            }
-                            if (y != 0 && y != recom[x].Count - 1 && recom[x].Count>2)
-                            {
-                                this.label6.Text += ", ";
-                            }
-                        }
-                        this.label6.Text += "\n";
-                    }
                 }
             }
             else if (this.radioButton2.Checked)
@@ -190,30 +152,6 @@ namespace MarkLizardman
                     //eksplor BFS
                     con = this.g.ExploreBFS(this.g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
                     this.label6.Text += "Eksplore BFS from " + from + " to " + to + " \n";
-                    if (con.Count > 2)
-                    {
-                        this.label6.Text += "Derajat Koneksi: " + (con.Count - 2) + "\n";
-                        for (int x = 0; x < con.Count; x++)
-                        {
-                            this.label6.Text += g.TranslatetoString(input.Kamus, con[x]);
-                            if (x != con.Count - 1)
-                            {
-                                this.label6.Text += " -> ";
-                            }
-                        }
-                    }
-                    else if (con.Count == 2)
-                    {
-                        this.label6.Text += "Sudah berteman, cari yang lain dong!!" + "\n";
-                    }
-                    else
-                    {
-                        this.label6.Text += "Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. " + "\n";
-                    }
-                    for (int i = 0; i < con.Count - 1; i++)
-                    {
-                        g.ColorEdge(con[i], con[i + 1], this.input.Kamus);
-                    }
                 }
                 else
                 {
@@ -221,25 +159,8 @@ namespace MarkLizardman
                     this.label6.Text = "";
                     recom = this.g.RecommendBFS(g.TranslatetoInt(this.input.Kamus, from));
                     g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), this.input.Kamus, "Orange");
+                    warna = "Green";
                     this.label6.Text += "Friend Recommendation BFS from " + from + "\n";
-                    for (int a = 0; a < recom.Count; a++)
-                    {
-                        for (int b = 0; b < recom[a].Count; b++)
-                        {
-                            this.label6.Text+=(g.TranslatetoString(input.Kamus, recom[a][b]));
-                            if (b == 0)
-                            {
-                                this.label6.Text += ":\n";
-                                this.label6.Text += "     " + (recom[a].Count - 1) + " Mutual friends: ";
-                                g.ColorNode(recom[a][b], this.input.Kamus, "Green");
-                            }
-                            if (b != 0 && b != recom[a].Count - 1 && recom[a].Count > 2)
-                            {
-                                this.label6.Text += ", ";
-                            }
-                        }
-                        this.label6.Text += "\n";
-                    }
                 }
             }
             else
@@ -248,7 +169,52 @@ namespace MarkLizardman
                 this.label6.Text = "Mohon Pilih Algoritma DFS atau BFS dulu!!!";
                 return;
             }
-            
+            if(con != null){
+                if (con.Count > 2)
+                {
+                    label6.Text += "Derajat Koneksi: " + (con.Count - 2) + "\n";
+                    for (int x = 0; x < con.Count; x++)
+                    {
+                        label6.Text += (g.TranslatetoString(input.Kamus, con[x]));
+                        if (x != con.Count - 1)
+                        {
+                            label6.Text += " -> ";
+                        }
+                    }
+                }
+                else if (con.Count == 2)
+                {
+                    this.label6.Text += "Sudah berteman, cari yang lain dong!!" + "\n";
+                }
+                else
+                {
+                    this.label6.Text += "Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. " + "\n";
+                }
+                for (int i = 0; i < con.Count - 1; i++)
+                {
+                    g.ColorEdge(con[i], con[i + 1], this.input.Kamus);
+                }
+            }
+            if(recom != null){
+                for (int x = 0; x < recom.Count; x++)
+                {
+                    for (int y = 0; y < recom[x].Count; y++)
+                    {
+                        this.label6.Text += g.TranslatetoString(input.Kamus, recom[x][y]);
+                        if (y == 0)
+                        {
+                            this.label6.Text += ":\n";
+                            this.label6.Text += "     " + (recom[x].Count-1) + " Mutual friends: ";
+                            g.ColorNode(recom[x][0], input.Kamus, warna);
+                        }
+                        if (y != 0 && y != recom[x].Count - 1 && recom[x].Count>2)
+                        {
+                            this.label6.Text += ", ";
+                        }
+                    }
+                    this.label6.Text += "\n";
+                }
+            }
             this.renderGraph();
         }
 
@@ -257,13 +223,9 @@ namespace MarkLizardman
         }
 
         private void renderGraph(){
-            // render graph
-            // render using bitmap rendering, not realtime :(
-            // TODO: attach GDIViewer to a panel?
-            renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(g.GetGraph());
-            Bitmap b = new Bitmap(pictureBox1.Width, pictureBox1.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            renderer.Render(b);
-            pictureBox1.Image = b;
+            // re-attach the graph to viewer
+            // essentially, "update" the view with latest graph
+            viewer.Graph = g.GetGraph();
         }
     }
 }
