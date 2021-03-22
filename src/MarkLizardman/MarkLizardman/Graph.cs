@@ -40,6 +40,20 @@ namespace MarkLizardman
             }
         }
 
+        public void ColorNode(int v, Dictionary<int, String> Kamus, String Warna)
+        {
+            Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
+            if (nv == null) return;
+            if (Warna == "Orange")
+            {
+                nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
+            }
+            else if (Warna == "Green")
+            {
+                nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+            }
+        }
+
         public Microsoft.Msagl.Drawing.Graph GetGraph()
         {
             return this.graph;
@@ -335,8 +349,6 @@ namespace MarkLizardman
 
         public void InputGraph(List<List<string>> DataNode, Dictionary<int, string> Kamus)
         {
-            //Console.Write(Kamus.ElementAt(1).Key);
-
             foreach (var line in DataNode)
             {
                 AddEdge(Kamus.FirstOrDefault(x => x.Value == line[0]).Key, Kamus.FirstOrDefault(x => x.Value == line[1]).Key, Kamus);
