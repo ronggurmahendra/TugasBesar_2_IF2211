@@ -121,11 +121,6 @@ namespace MarkLizardman
             }
             from = this.comboBox1.SelectedItem.ToString();
             if(this.comboBox2.SelectedItem != null) to = this.comboBox2.SelectedItem.ToString();
-            if(this.comboBox2.SelectedItem.ToString() == this.comboBox1.SelectedItem.ToString())
-            {
-                this.label6.Text = "Jangan Pilih diri sendiri dong!!";
-                return;
-            }
             List<int> con = null;
             List<List<int>> recom = new List<List<int>>();
             if (this.radioButton1.Checked)
@@ -136,7 +131,11 @@ namespace MarkLizardman
                 {
                     //explore dfs
                     con = this.g.ExploreDFS(g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
-                    this.label6.Text += "Eksplor DFS from " + from + " to " + to + "\n";
+                    this.label6.Text += "Eksplore DFS from " + from + " to " + to + "\n";
+                    for (int i = 0; i < con.Count - 1; i++)
+                    {
+                        g.ColorEdgeDFS(con[i], con[i + 1], this.input.Kamus);
+                    }
                 }
                 else
                 {
@@ -156,14 +155,18 @@ namespace MarkLizardman
                     //eksplor BFS
                     con = this.g.ExploreBFS(this.g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
                     this.label6.Text += "Eksplore BFS from " + from + " to " + to + " \n";
+                    for (int i = 0; i < con.Count - 1; i++)
+                    {
+                        g.ColorEdgeBFS(con[i], con[i + 1], this.input.Kamus);
+                    }
                 }
                 else
                 {
                     //recom BFS
                     this.label6.Text = "";
                     recom = this.g.RecommendBFS(g.TranslatetoInt(this.input.Kamus, from));
-                    g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), this.input.Kamus, "Orange");
-                    warna = "Green";
+                    g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), this.input.Kamus, "YellowGreen");
+                    warna = "LightBlue";
                     this.label6.Text += "Friend Recommendation BFS from " + from + "\n";
                 }
             }
@@ -171,6 +174,11 @@ namespace MarkLizardman
             {
                 // neither
                 this.label6.Text = "Mohon Pilih Algoritma DFS atau BFS dulu!!!";
+                return;
+            }
+            if(this.comboBox2.SelectedItem == this.comboBox1.SelectedItem)
+            {
+                this.label6.Text = "Jangan Pilih diri sendiri dong!!";
                 return;
             }
             if(con != null){
@@ -194,10 +202,7 @@ namespace MarkLizardman
                 {
                     this.label6.Text += "Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. " + "\n";
                 }
-                for (int i = 0; i < con.Count - 1; i++)
-                {
-                    g.ColorEdge(con[i], con[i + 1], this.input.Kamus);
-                }
+                
             }
             if(recom != null){
                 for (int x = 0; x < recom.Count; x++)

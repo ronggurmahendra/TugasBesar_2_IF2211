@@ -22,7 +22,7 @@ namespace MarkLizardman
                 adj[i] = new List<int>();
         }
 
-        public void ColorEdge(int v, int w, Dictionary<int, String> Kamus)
+        public void ColorEdgeDFS(int v, int w, Dictionary<int, String> Kamus)
         {
             Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
             Microsoft.Msagl.Drawing.Node nw = graph.FindNode(Kamus[w]);
@@ -32,9 +32,29 @@ namespace MarkLizardman
                 if ((e.SourceNode == nv && e.TargetNode == nw) ||
                    (e.SourceNode == nw && e.TargetNode == nv))
                 {
-                    nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
-                    nw.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
+                    nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Orange;
+                    nw.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Orange;
                     e.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                    e.Attr.LineWidth = 4;
+                    break;
+                }
+            }
+        }
+
+        public void ColorEdgeBFS(int v, int w, Dictionary<int, String> Kamus)
+        {
+            Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
+            Microsoft.Msagl.Drawing.Node nw = graph.FindNode(Kamus[w]);
+            if (nv == null || nw == null) return;
+            foreach (Microsoft.Msagl.Drawing.Edge e in nv.Edges)
+            {
+                if ((e.SourceNode == nv && e.TargetNode == nw) ||
+                   (e.SourceNode == nw && e.TargetNode == nv))
+                {
+                    nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.GreenYellow;
+                    nw.Attr.FillColor = Microsoft.Msagl.Drawing.Color.GreenYellow;
+                    e.Attr.Color = Microsoft.Msagl.Drawing.Color.Blue;
+                    e.Attr.LineWidth = 4;
                     break;
                 }
             }
@@ -46,11 +66,19 @@ namespace MarkLizardman
             if (nv == null) return;
             if (Warna == "Orange")
             {
-                nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Orange;
+                nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Orange;
             }
             else if (Warna == "Green")
             {
-                nv.Attr.Color = Microsoft.Msagl.Drawing.Color.Green;
+                nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Green;
+            }
+            else if (Warna == "YellowGreen")
+            {
+                nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.YellowGreen;
+            }
+            else if (Warna == "LightBlue")
+            {
+                nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.LightBlue;
             }
         }
 
