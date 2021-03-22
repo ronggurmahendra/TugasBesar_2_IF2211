@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace MarkLizardman
 {
     class MainProgram
     {
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+        /*
         public static void Main(String[] args)
         {
+            
             string filename;
             if (args.Length == 1) filename = args[0];
             else filename = @"../../graph.txt";
@@ -23,19 +33,6 @@ namespace MarkLizardman
             List<int> ExploreBFS = new List<int>();
             int contoh = g.TranslatetoInt(input.Kamus, "D");
             int contoh2 = g.TranslatetoInt(input.Kamus, "H");
-            /*foreach (var key in input.Kamus)
-            {
-                Console.Write(key.Key);
-                Console.Write("\t" + key.Value);
-                Console.WriteLine();
-            }
-            foreach (var line in input.DataNode)
-            {
-                Console.Write(line[0]);
-                Console.Write("  -->  " + line[1]);
-                Console.WriteLine();
-            }
-            */
             g.InputGraph(input.DataNode, input.Kamus);
             Dictionary<int, List<int>> hasil = g.DFS(AL, contoh, contoh2, input.Node);
             Console.Write("AL Count: " + hasil.Count);
@@ -44,13 +41,6 @@ namespace MarkLizardman
 
             Console.Write("\n");
             Console.WriteLine(AL.Count);
-            /*
-            for (int i = 0; i < AL.Count - 1; i++)
-            {
-                g.AddEdgeDFS(AL[i], AL[i + 1]);
-
-            }
-            */
             for (int i = 0; i < g.adj.Count(); i++)
             {
                 Console.Write(input.Kamus.ElementAt(i).Value + ": ");
@@ -66,7 +56,6 @@ namespace MarkLizardman
             for (int i = 0; i < AL.Count; i++)
             {
                 Console.Write(input.Kamus.ElementAt(AL[i]).Value);
-                //Console.Write(AL[i]);
                 Console.Write(" ");
             }
             Console.WriteLine();
@@ -75,7 +64,6 @@ namespace MarkLizardman
             for (int i = 0; i < BL.Count; i++)
             {
                 Console.Write(input.Kamus.ElementAt(BL[i]).Value);
-                //Console.Write(BL[i]);
                 Console.Write(" ");
             }
             Console.WriteLine();
@@ -168,5 +156,6 @@ namespace MarkLizardman
             }
             //Console.ReadKey();
         }
+        */
     }
 }
