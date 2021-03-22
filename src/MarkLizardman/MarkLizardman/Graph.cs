@@ -322,7 +322,15 @@ namespace MarkLizardman
         public List<int> ExploreDFS(int awal, int akhir)
         {
             List<int> bracket = new List<int>();
-            _ = DFS(bracket, awal, akhir, V);
+            if (!adj[awal].Contains(akhir))
+            {
+                _ = DFS(bracket, awal, akhir, V);
+            }
+            else
+            {
+                bracket.Add(awal);
+                bracket.Add(akhir);
+            }
             return bracket;
         }
 

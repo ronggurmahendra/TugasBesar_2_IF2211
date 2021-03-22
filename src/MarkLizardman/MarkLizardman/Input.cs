@@ -22,7 +22,6 @@ namespace MarkLizardman{
             string[] lines = System.IO.File.ReadAllLines(filename);
 
             // Display the file contents by using a foreach loop.
-            Console.WriteLine("Contents of WriteLines2.txt = ");
             int i = 0;
             foreach (string line in lines)
             {
@@ -37,12 +36,6 @@ namespace MarkLizardman{
                     i++;
                 }
                 // Use a tab to indent each line of the file.
-            }
-            foreach (var line in bracket)
-            {
-                Console.Write(line[0]);
-                Console.Write(line[1]);
-                Console.WriteLine();
             }
             return bracket;
         }

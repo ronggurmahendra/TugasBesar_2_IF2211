@@ -15,6 +15,7 @@ namespace MarkLizardman
         private Input input;
         private Graph g;
         private Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer;
+        private String filename;
 
         public Form1()
         {
@@ -37,7 +38,6 @@ namespace MarkLizardman
         }
 
         private void selectFile_pressed(object sender, EventArgs e){
-            String filename;
             if(ofd.ShowDialog() == DialogResult.OK){
                 filename = ofd.FileName;
                 this.textBox1.Text = filename;
@@ -104,6 +104,14 @@ namespace MarkLizardman
 
         private void button1_Click(object sender, EventArgs eventArgs){
             String from, to = null;
+            filename = ofd.FileName;
+            this.textBox1.Text = filename;
+            // parse input
+            input = new Input(filename);
+            // initialize graph
+            g = new Graph(input.Node);
+            g.InputGraph(input.DataNode, input.Kamus);
+            this.renderGraph();
             if (this.comboBox1.SelectedItem == null || comboBox1.SelectedItem == "")
             {
                 this.label6.Text = "Mohon Ambil --Choose Account-- terlebih dahulu agar bisa diproses";
@@ -179,6 +187,7 @@ namespace MarkLizardman
                 this.label6.Text = "";
                 if (to != null && to != "")
                 {
+                    //eksplor BFS
                     con = this.g.ExploreBFS(this.g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
                     this.label6.Text += "Eksplore BFS from " + from + " to " + to + " \n";
                     if (con.Count > 2)
@@ -208,8 +217,10 @@ namespace MarkLizardman
                 }
                 else
                 {
+                    //recom BFS
                     this.label6.Text = "";
                     recom = this.g.RecommendBFS(g.TranslatetoInt(this.input.Kamus, from));
+                    g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), this.input.Kamus, "Orange");
                     this.label6.Text += "Friend Recommendation BFS from " + from + "\n";
                     for (int a = 0; a < recom.Count; a++)
                     {
@@ -220,6 +231,7 @@ namespace MarkLizardman
                             {
                                 this.label6.Text += ":\n";
                                 this.label6.Text += "     " + (recom[a].Count - 1) + " Mutual friends: ";
+                                g.ColorNode(recom[a][b], this.input.Kamus, "Green");
                             }
                             if (b != 0 && b != recom[a].Count - 1 && recom[a].Count > 2)
                             {
