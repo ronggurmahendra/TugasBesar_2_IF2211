@@ -55,6 +55,7 @@ namespace MarkLizardman
                 this.comboBox1.Items.AddRange(input.Kamus.Values.ToArray());
                 this.comboBox2.Items.AddRange(input.Kamus.Values.ToArray());
                 this.comboBox2.Items.Add("");
+                button1.Enabled = true;
             }
         }
 
@@ -115,11 +116,16 @@ namespace MarkLizardman
             this.renderGraph();
             if (this.comboBox1.SelectedItem == null || comboBox1.SelectedItem.ToString() == "")
             {
-                this.label6.Text = "Mohon Ambil --Choose Account-- terlebih dahulu agar bisa diproses";
+                this.label6.Text = "Mohon Ambil --Choose Account-- agar bisa diproses";
                 return;
             }
             from = this.comboBox1.SelectedItem.ToString();
             if(this.comboBox2.SelectedItem != null) to = this.comboBox2.SelectedItem.ToString();
+            if(this.comboBox2.SelectedItem.ToString() == this.comboBox1.SelectedItem.ToString())
+            {
+                this.label6.Text = "Jangan Pilih diri sendiri dong!!";
+                return;
+            }
             List<int> con = null;
             List<List<int>> recom = new List<List<int>>();
             if (this.radioButton1.Checked)
@@ -218,7 +224,9 @@ namespace MarkLizardman
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            button1.Enabled = false;
             viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Controls.Add(viewer);
         }
 
@@ -226,6 +234,16 @@ namespace MarkLizardman
             // re-attach the graph to viewer
             // essentially, "update" the view with latest graph
             viewer.Graph = g.GetGraph();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
