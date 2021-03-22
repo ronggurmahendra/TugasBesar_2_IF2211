@@ -40,10 +40,10 @@ namespace MarkLizardman
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label6 = new System.Windows.Forms.Label();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,16 +62,16 @@ namespace MarkLizardman
             this.textBox1.Location = new System.Drawing.Point(208, 63);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(179, 22);
-            this.textBox1.TabIndex = 3;
+            this.textBox1.TabIndex = 4;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            //
-            // selectFile
-            //
+            // 
+            // selectfile
+            // 
             this.selectfile.Location = new System.Drawing.Point(387, 62);
             this.selectfile.Name = "selectfile";
-            this.selectfile.Text = "Select File";
             this.selectfile.Size = new System.Drawing.Size(100, 24);
-            this.textBox1.TabIndex = 4;
+            this.selectfile.TabIndex = 18;
+            this.selectfile.Text = "Select File";
             this.selectfile.Click += new System.EventHandler(this.selectFile_pressed);
             // 
             // label2
@@ -146,18 +146,7 @@ namespace MarkLizardman
             this.button1.TabIndex = 13;
             this.button1.Text = "Submit";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(button1_Click);
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(64, 448);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(72, 17);
-            this.linkLabel1.TabIndex = 14;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "linkLabel1";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label6
             // 
@@ -192,6 +181,12 @@ namespace MarkLizardman
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
+            // ofd
+            // 
+            this.ofd.Filter = "txt files(*.txt)|*.txt|All files (*.*)|*.*";
+            this.ofd.FilterIndex = 2;
+            this.ofd.RestoreDirectory = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -200,7 +195,6 @@ namespace MarkLizardman
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
@@ -218,10 +212,7 @@ namespace MarkLizardman
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            ofd = new System.Windows.Forms.OpenFileDialog();
-            ofd.Filter = "txt files(*.txt)|*.txt|All files (*.*)|*.*";
-            ofd.FilterIndex = 2;
-            ofd.RestoreDirectory = true;
+
         }
 
         #endregion
@@ -236,7 +227,6 @@ namespace MarkLizardman
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;

@@ -110,13 +110,58 @@ namespace MarkLizardman
             List<List<int>> recom = new List<List<int>>();
             if(this.radioButton1.Checked){
                 // dfs
-                if(to != null)
+                this.label6.Text = "";
+                if (to != null)
                     con = this.g.ExploreDFS(g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
+                    this.label6.Text += "Eksplor DFS from " + from + " to " + to + "\n";
+                    if (con.Count > 2)
+                    {
+                        label6.Text += "Derajat Koneksi: " + (con.Count - 2) + "\n";
+                        for (int x = 0; x < con.Count; x++)
+                        {
+                            label6.Text += (g.TranslatetoString(input.Kamus, con[x]));
+                            if (x != con.Count - 1)
+                            {
+                                label6.Text += " -> ";
+                            }
+                        }
+                    }
+                    else if (con.Count == 2)
+                    {
+                        this.label6.Text+= "Sudah berteman, cari yang lain dong!!" + "\n";
+                    }
+                    else
+                    {
+                        this.label6.Text += "Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. " + "\n";
+                    }
             }
             else if(this.radioButton2.Checked){
                 // bfs
-                if(to != null)
+                this.label6.Text = "";
+                if (to != null)
                     con = this.g.ExploreBFS(this.g.TranslatetoInt(this.input.Kamus, from), g.TranslatetoInt(this.input.Kamus, to));
+                    this.label6.Text += "Eksplore BFS from " + from + " to " + to + "\n";
+                    if (con.Count > 2)
+                    {
+                        this.label6.Text += "Derajat Koneksi: " + (con.Count - 2) + "\n";
+                        for (int x = 0; x < con.Count; x++)
+                        {
+                            this.label6.Text += g.TranslatetoString(input.Kamus, con[x]);
+                            if (x != con.Count - 1)
+                            {
+                                this.label6.Text += " -> ";
+                            }
+                        }
+                    }
+                    else if (con.Count == 2)
+                    {
+                        this.label6.Text += "Sudah berteman, cari yang lain dong!!" + "\n";
+                    }
+                    else
+                    {
+                        this.label6.Text += "Tidak ada jalur koneksi yang tersedia! \nAnda harus memulai koneksi baru itu sendiri. " + "\n";
+                    }
+
             }
             else {
                 // neither
@@ -130,7 +175,7 @@ namespace MarkLizardman
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            //label6.Text = "aaa";
         }
 
         private void renderGraph(){
