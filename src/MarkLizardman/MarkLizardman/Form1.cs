@@ -47,8 +47,6 @@ namespace MarkLizardman
                 // initialize graph
                 g = new Graph(input.Node);
                 g.InputGraph(input.DataNode, input.Kamus);
-                viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-                panel1.Controls.Add(viewer);
                 this.renderGraph();
                 // clear combobox
                 this.comboBox1.Items.Clear();
@@ -220,6 +218,8 @@ namespace MarkLizardman
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
+            panel1.Controls.Add(viewer);
         }
 
         private void renderGraph(){
