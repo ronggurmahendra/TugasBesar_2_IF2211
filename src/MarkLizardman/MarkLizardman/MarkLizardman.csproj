@@ -106,5 +106,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngwing.com.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BFS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DFS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DFS1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

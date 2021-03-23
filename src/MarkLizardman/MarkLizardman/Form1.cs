@@ -12,11 +12,13 @@ namespace MarkLizardman
 {
     public partial class Form1 : Form
     {
+        private Button currentButton;
         private Input input;
         private Graph g;
         // private Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer;
         private Microsoft.Msagl.GraphViewerGdi.GViewer viewer;
-        private String filename;
+        private string filename;
+        private string algorithm = "null";
 
         public Form1()
         {
@@ -94,16 +96,6 @@ namespace MarkLizardman
 
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs eventArgs){
             String from, to = null, warna = "";
             filename = ofd.FileName;
@@ -123,7 +115,7 @@ namespace MarkLizardman
             if(this.comboBox2.SelectedItem != null) to = this.comboBox2.SelectedItem.ToString();
             List<int> con = null;
             List<List<int>> recom = new List<List<int>>();
-            if (this.radioButton1.Checked)
+            if (this.algorithm == "DFS")
             {
                 // dfs
                 this.label6.Text = "";
@@ -143,10 +135,17 @@ namespace MarkLizardman
                     recom = this.g.RecommendDFS(g.TranslatetoInt(this.input.Kamus, from));
                     g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), input.Kamus, "Green");
                     warna = "Orange";
-                    this.label6.Text += "Friend Recommendation DFS from " + from + " \n";
+                    if (recom.Count > 0)
+                    {
+                        this.label6.Text += "Friend Recommendation DFS from " + from + "\n";
+                    }
+                    else
+                    {
+                        this.label6.Text = from + " harus memperluas koneksi agar rekomendasi muncul \n";
+                    }
                 }
             }
-            else if (this.radioButton2.Checked)
+            else if (this.algorithm == "BFS")
             {
                 // bfs
                 this.label6.Text = "";
@@ -167,7 +166,14 @@ namespace MarkLizardman
                     recom = this.g.RecommendBFS(g.TranslatetoInt(this.input.Kamus, from));
                     g.ColorNode(g.TranslatetoInt(this.input.Kamus, from), this.input.Kamus, "YellowGreen");
                     warna = "LightBlue";
-                    this.label6.Text += "Friend Recommendation BFS from " + from + "\n";
+                    if (recom.Count > 0)
+                    {
+                        this.label6.Text += "Friend Recommendation BFS from " + from + "\n";
+                    }
+                    else
+                    {
+                        this.label6.Text = from + " harus memperluas koneksi agar rekomendasi muncul \n";
+                    }
                 }
             }
             else
@@ -249,6 +255,61 @@ namespace MarkLizardman
         private void pictureBox2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ActivateButton(sender);
+            this.algorithm = "BFS";
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ActivateButton(sender);
+            this.algorithm = "DFS";
+        }
+
+        private void ActivateButton(object btnSender)
+        {
+            if (btnSender != null)
+            {
+                if (currentButton != (Button)btnSender)
+                {
+                    DisableButton();
+                    Color color = Color.RoyalBlue;
+                    currentButton = (Button)btnSender;
+                    currentButton.BackColor = color;
+                    currentButton.ForeColor = Color.White;
+                    currentButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    /*panelTitleBar.BackColor = color;
+                    panelLogo.BackColor = ThemeColor.ChangeColorBrightness(color, -0.3);
+                    ThemeColor.PrimaryColor = color;
+                    ThemeColor.SecondaryColor = ThemeColor.ChangeColorBrightness(color, -0.3);
+                    btnCloseChildForm.Visible = true;*/
+                }
+            }
+        }
+        private void DisableButton()
+        {
+            foreach (Control previousBtn in panel2.Controls)
+            {
+                if (previousBtn.GetType() == typeof(Button))
+                {
+                    previousBtn.BackColor = Color.MidnightBlue;
+                    previousBtn.ForeColor = Color.Gainsboro;
+                    previousBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                }
+            }
         }
     }
 }
