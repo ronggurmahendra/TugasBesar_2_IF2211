@@ -7,13 +7,14 @@ namespace MarkLizardman
     class Graph
     {
         Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("graph");
-        private int V; // No. of vertices
+        private int V; // Jumlah Node pada suatu graph
 
-        // Array of lists for
-        // Adjacency List Representation
+        //Struktur data Array of List
         public List<int>[] adj;
 
-        // Constructor
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
         public Graph(int v)
         {
             V = v;
@@ -22,6 +23,9 @@ namespace MarkLizardman
                 adj[i] = new List<int>();
         }
 
+        /// <summary>
+        ///Bertugas memberikan warna pada simpul yang akan ditunjuk ketika algoritma DFS digunakan
+        /// </summary>
         public void ColorEdgeDFS(int v, int w, Dictionary<int, String> Kamus)
         {
             Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
@@ -40,7 +44,9 @@ namespace MarkLizardman
                 }
             }
         }
-
+        /// <summary>
+        ///Bertugas memberikan warna pada simpul yang akan ditunjuk ketika algoritma BFS digunakan
+        /// </summary>
         public void ColorEdgeBFS(int v, int w, Dictionary<int, String> Kamus)
         {
             Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
@@ -60,6 +66,9 @@ namespace MarkLizardman
             }
         }
 
+        /// <summary>
+        /// Bertugas memberikan warna pada sudut yang akan ditunjuk
+        /// </summary>
         public void ColorNode(int v, Dictionary<int, String> Kamus, String Warna)
         {
             Microsoft.Msagl.Drawing.Node nv = graph.FindNode(Kamus[v]);
@@ -81,13 +90,17 @@ namespace MarkLizardman
                 nv.Attr.FillColor = Microsoft.Msagl.Drawing.Color.LightBlue;
             }
         }
-
+        /// <summary>
+        /// Mendapatkan Graph yang akan dipilih untuk digunakan lebih lanjut
+        /// </summary>
         public Microsoft.Msagl.Drawing.Graph GetGraph()
         {
             return this.graph;
         }
 
-        // Function to Add an edge into the graph
+        /// <summary>
+        /// Fungsi untuk menambah simpul pada graf
+        /// </summary>
         void AddEdge(int v, int w, Dictionary<int, String> Kamus)
         {
             //JANGAN LUPA
@@ -97,7 +110,9 @@ namespace MarkLizardman
             e.Attr.ArrowheadAtSource = Microsoft.Msagl.Drawing.ArrowStyle.None;
             e.Attr.ArrowheadAtTarget = Microsoft.Msagl.Drawing.ArrowStyle.None;
         }
-
+        /// <summary>
+        /// Algoritma Utama Bread First Search
+        /// </summary>
         public Dictionary<int, int> BFS(List<int> BL, int v, int target, int node)
         {
             bool ketemu = false;
@@ -157,7 +172,9 @@ namespace MarkLizardman
             return prev;
         }
 
-        // A function used by DFS
+        /// <summary>
+        /// Algoritma Pembantu Depth First Search
+        /// </summary>
         public void DFSUtil(List<int> AL, int v, List<int> visited,
             int target, List<List<int>> road_used, int parent, int it, int node, bool hapus)
         {
@@ -219,8 +236,10 @@ namespace MarkLizardman
             }
         }
 
-        // The function to do DFS traversal.
-        // It uses recursive DFSUtil()
+        /// <summary>
+        /// Algoritma Utama Depth First Search
+        /// , akan dibantu rekursif dengan fungsi DFSUtil
+        /// </summary>
         public Dictionary<int, List<int>> DFS(List<int> AL, int v, int target, int node)
         {
             // Mark all the vertices as not visited
@@ -233,7 +252,6 @@ namespace MarkLizardman
             // Call the recursive helper function
             // to print DFS traversal
             DFSUtil(AL, v, visited, target, road_used, -1, 0, node, hapus);
-            //AL.Add(target);
             foreach (var value in AL)
             {
                 List<int> masuk = new List<int> { value };
@@ -254,6 +272,10 @@ namespace MarkLizardman
         {
             return kamus.FirstOrDefault(x => x.Value == y).Key;
         }
+
+        /// <summary>
+        /// Memberikan Rekomendasi Teman bagi sudut awal secara DFS
+        /// </summary>
         public List<List<int>> RecommendDFS(int awal)
         {
             List<int> AL1 = new List<int>();
@@ -287,10 +309,12 @@ namespace MarkLizardman
             return NewBucket;
         }
 
+        /// <summary>
+        /// Memberikan Rekomendasi Teman bagi sudut awal secara BFS
+        /// </summary>
         public List<List<int>> RecommendBFS(int awal)
         {
             //Komparasi 2 array hasil dfs first degree
-            //
             List<List<int>> Bucket = new List<List<int>>();
 
             Dictionary<int, int> previous = new Dictionary<int, int>();
@@ -334,6 +358,9 @@ namespace MarkLizardman
             return NewBucket;
         }
 
+        /// <summary>
+        /// Eksplorasi Teman bagi sudut awal dan sudut target secara DFS
+        /// </summary>
         public List<int> ExploreDFS(int awal, int akhir)
         {
             List<int> bracket = new List<int>();
@@ -349,7 +376,9 @@ namespace MarkLizardman
             return bracket;
         }
 
-
+        /// <summary>
+        /// Eksplorasi Teman bagi sudut awal dan sudut target secara BFS
+        /// </summary>
         public List<int> ExploreBFS(int awal, int akhir)
         {
             Dictionary<int, int> prev = new Dictionary<int, int>();
@@ -369,7 +398,9 @@ namespace MarkLizardman
             }
             return bracket2;
         }
-
+        /// <summary>
+        /// Fungsi untuk membuat graph dari input dan sort secara alphabetical agar terurut
+        /// </summary>
         public void InputGraph(List<List<string>> DataNode, Dictionary<int, string> Kamus)
         {
             foreach (var line in DataNode)
