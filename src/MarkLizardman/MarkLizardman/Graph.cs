@@ -231,14 +231,10 @@ namespace MarkLizardman
         /// </summary>
         public Dictionary<int, List<int>> DFS(List<int> AL, int v, int target, int node)
         {
-            // Mark all the vertices as not visited
-            // (set as false by default in c#)
             Dictionary<int, List<int>> child = new Dictionary<int, List<int>>();
             List<int> visited = new List<int>();
             List<List<int>> road_used = new List<List<int>>();
             bool hapus = false;
-            // Call the recursive helper function
-            // to print DFS traversal
             DFSUtil(AL, v, visited, target, road_used, -1, 0, node, hapus);
             foreach (var value in AL)
             {
