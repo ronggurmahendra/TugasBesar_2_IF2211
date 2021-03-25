@@ -117,15 +117,12 @@ namespace MarkLizardman
         {
             bool ketemu = false;
             Dictionary<int, int> prev = new Dictionary<int, int>();
-            // Mark all the vertices as not
-            // visited(By default set as false) 
             List<int> visited = new List<int>();
 
-            // Create a queue for BFS 
+            // Buat Queue baru untuk BFS
             Queue<int> queue = new Queue<int>();
 
-            // Mark the current node as 
-            // visited and enqueue it 
+            //Kalau sudah dikunjungi, tambah ke list add
             visited.Add(v);
             if (!BL.Contains(v))
             {
@@ -140,8 +137,7 @@ namespace MarkLizardman
                     ketemu = true;
                     break;
                 }
-                // Dequeue a vertex from queue 
-                // and print it
+                //Bangkitkan solusi antriannya
                 int s = queue.Dequeue();
 
                 if (!BL.Contains(s))
@@ -178,11 +174,9 @@ namespace MarkLizardman
         public void DFSUtil(List<int> AL, int v, List<int> visited,
             int target, List<List<int>> road_used, int parent, int it, int node, bool hapus)
         {
-            // Check if all th node is visited or not
-            // and count unvisited nodes
             int c = visited.Distinct().Count();
 
-            // If all the node is visited return;
+            // Kalau semua sudah dikunjungi, return saja;
             if (c == node || AL.Contains(target))
             {
                 return;
@@ -192,8 +186,7 @@ namespace MarkLizardman
                 return;
             }
 
-            // Mark the current node as visited
-            // and print it
+            //Tambahkan ke daftar dikunjungi
             if (!visited.Contains(v))
             {
                 visited.Add(v);
@@ -204,12 +197,10 @@ namespace MarkLizardman
                 AL.Add(v);
             }
 
-            // Recur for all the vertices
-            // adjacent to this vertex
             List<int> vList = adj.ElementAt(v);
             for (int x = 0; x < node; x++)
             {
-                // call the DFs function if not visited
+                // Panggil fungsi DFS apabila tidak dikunjungi
                 if (!visited.Contains(x) && vList.Contains(x))
                 {
                     hapus = false;
@@ -220,8 +211,6 @@ namespace MarkLizardman
             {
                 return;
             }
-            // Backtrack through the last
-            // visited nodes
             for (int y = 0; y < road_used.Count; y++)
             {
                 if (road_used[y][1] == v)
@@ -246,7 +235,6 @@ namespace MarkLizardman
             // (set as false by default in c#)
             Dictionary<int, List<int>> child = new Dictionary<int, List<int>>();
             List<int> visited = new List<int>();
-
             List<List<int>> road_used = new List<List<int>>();
             bool hapus = false;
             // Call the recursive helper function
